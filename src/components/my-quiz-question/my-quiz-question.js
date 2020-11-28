@@ -17,9 +17,11 @@ template.innerHTML = `
 
 const question2 = document.createElement('template')
 question2.innerHTML = `
+<div id="displayedQustion">
 <h3 id="question"></h3>
 <input type="text" placeholder="Svar" id="questionInput">
 <button type="button" id="answerBtn">Fortsätt</button>
+</div>
 `
 
 /**
@@ -86,6 +88,33 @@ customElements.define('my-quiz-question',
       alert('20 sec you lost!')
       location.reload() // laddar om sidan!
     }, 20000)
+    this.questionAnswer()
+    }
+
+    questionAnswer () {
+      console.log('questionAnser: här svaret väntas in och bearbetas!')
+
+      const answerBtn = this.shadowRoot.querySelector('#answerBtn')
+
+      answerBtn.addEventListener('click', () => {
+       var answer = this.shadowRoot.querySelector('#questionInput').value
+       this.postAnswer(answer)
+      })
+    }
+
+    async postAnswer (userResult) {
+      console.log('postAnswer starts')
+      console.log('anv resultat: ', userResult) // användarens resultat
+
+      var obj = {}
+
+      var value = userResult
+      obj.answer = value
+
+      var jsonObj = JSON.stringify(obj) // JSON som ska skickar till server
+
+      console.log(jsonObj)
+
 
     }
 

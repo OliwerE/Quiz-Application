@@ -18,28 +18,6 @@ setup.innerHTML = `
 </div>
 `
 
-const questionInput = document.createElement('template')
-questionInput.innerHTML = `
-<div id="nameSetup">
-<h2></h2> <!--Fråga-->
-<input type="text" placeholder="Svar" id="myInput">
-<button type="button" id="nextQ">Nästa fråga</button>
-</div>
-`
-
-const questionRadio = document.createElement('template')
-questionRadio.innerHTML = `
-<div id="nameSetup">
-<h2></h2> <!--Fråga-->
-
-<h1>Radioknappar här fixa! debug input:</h1>
-<input type="text" placeholder="Svar" id="myInput">
-<button type="button" id="nextQ">Nästa fråga</button>
-
-</div>
-`
-
-
 const template = document.createElement('template')
 template.innerHTML = `
   <style>
