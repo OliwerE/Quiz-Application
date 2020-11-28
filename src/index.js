@@ -6,6 +6,7 @@
  */
 
 import './components/my-quiz/'
+import './components/my-nickname/'
  
 /*
 const messageContainer = document.querySelector('#messageContainer')

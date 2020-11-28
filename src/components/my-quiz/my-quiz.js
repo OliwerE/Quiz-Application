@@ -18,6 +18,27 @@ setup.innerHTML = `
 </div>
 `
 
+const questionInput = document.createElement('template')
+questionInput.innerHTML = `
+<div id="nameSetup">
+<h2></h2> <!--Fråga-->
+<input type="text" placeholder="Svar" id="myInput">
+<button type="button" id="nextQ">Nästa fråga</button>
+</div>
+`
+
+const questionRadio = document.createElement('template')
+questionRadio.innerHTML = `
+<div id="nameSetup">
+<h2></h2> <!--Fråga-->
+
+<h1>Radioknappar här fixa! debug input:</h1>
+<input type="text" placeholder="Svar" id="myInput">
+<button type="button" id="nextQ">Nästa fråga</button>
+
+</div>
+`
+
 
 const template = document.createElement('template')
 template.innerHTML = `
@@ -46,8 +67,11 @@ customElements.define('my-quiz',
     }
 
     connectedCallback () {
-      this.quizSetup()
+      console.log('connected called!')
 
+      // skapar nickname med my-nickname komponent!
+      const clickLog = document.createElement('my-nickname')
+      document.querySelector('body').appendChild(clickLog)
 
     }
 
@@ -59,21 +83,16 @@ customElements.define('my-quiz',
 
     }
 
-    quizSetup () {
-      this.shadowRoot.appendChild(setup.content.cloneNode(true))
-      const setupBtn = this.shadowRoot.querySelector('#setupBtn')
+    nextQuestion () {
+      console.log('är i nextQuestion!')
       
-        setupBtn.addEventListener('click', () => {
-          const inputValue = this.shadowRoot.querySelector('#myInput').value
-          console.log(inputValue)
-          document.cookie = inputValue  // Temp lösning! sparar som cookie!
-          this.removeQuizSetup()
-        })
-    }
-    removeQuizSetup () {
-      console.log('jag är här')
+      // Tar emot frågan (resultat)
 
-      this.shadowRoot.querySelector('#nameSetup').remove()
+      // avgör OM det finns fler frågor (annars gå till avslut/high score)
+
+      // väljer typ av input
+
+      // går till question event lyssnare
     }
   }
 )
