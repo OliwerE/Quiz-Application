@@ -21,6 +21,7 @@ question2.innerHTML = `
 <h3 id="question"></h3>
 <input type="text" placeholder="Svar" id="questionInput">
 <button type="button" id="answerBtn">Fortsätt</button>
+<p id="response"></p>
 </div>
 `
 
@@ -32,6 +33,7 @@ customElements.define('my-quiz-question',
 
     constructor () {
       super()
+      this._nextUrl = 'http://courselab.lnu.se/question/1' // första frågan
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
@@ -57,12 +59,13 @@ customElements.define('my-quiz-question',
 
     async getQuestion () {
       var _this = this
-        await window.fetch('http://courselab.lnu.se/question/1').then(function (response) {
+        await window.fetch(this._nextUrl).then(function (response) {
             //console.log(response.json())
             return response.json()
         }).then(function (obj) {
-            //console.log(obj)
+            console.log(obj)
             _this.returnObject = obj
+            _this._nextUrl = obj.nextURL
             _this.showQuestion()
         }).catch(function(err) { // fångar eventuella fel
             console.error('fel har inträffat')
@@ -83,11 +86,16 @@ customElements.define('my-quiz-question',
     const questionHeaderText = document.createTextNode(currentQuestion)
     questionHeader.appendChild(questionHeaderText)
   
-    // 20 sek timern
+    // 20 sek timern AKTIVERA SEN!
+    
+    /*
     setTimeout(function () {
       alert('20 sec you lost!')
       location.reload() // laddar om sidan!
     }, 20000)
+    */
+
+
     this.questionAnswer()
     }
 
@@ -115,7 +123,53 @@ customElements.define('my-quiz-question',
 
       console.log(jsonObj)
 
+      var _this = this
+    await window.fetch(this._nextUrl, { // await släpper kön
+    method: 'Post',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(obj) 
+    
+}).then(function (response) {
+  //console.log(response.json())
+  return response.json()
+}).then(function (postResponse) {
+  console.log(postResponse)
+  _this._answerResponse = postResponse // lagrar responsen i this._answerResponse
+  _this.returnResponse()
+}).catch(function(err) { // fångar eventuella fel
+  console.error('fel har inträffat')
+  console.error(err)
+})
+  
+// lagra next URL
 
-    }
+/*
+console.log('test')
+console.log(this._answerResponse.nextURL)
+*/
+}
+
+returnResponse () {
+
+  const responseElement = this.shadowRoot.querySelector('#response')
+  const responseText = document.createTextNode(this._answerResponse.message)
+  responseElement.appendChild(responseText)
+
+  this._nextUrl = this._answerResponse.nextURL // sätter nästa url
+
+  console.log(this._nextUrl)
+
+  this.resetQuestion()
+}
+
+resetQuestion () { // återställer frågor och tar fram nästa
+
+  this.shadowRoot.querySelector('#displayedQustion').remove()
+
+  this.getQuestion()
+
+}
 
     })
