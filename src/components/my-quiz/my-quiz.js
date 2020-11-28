@@ -73,6 +73,7 @@ customElements.define('my-quiz',
       const clickLog = document.createElement('my-nickname')
       document.querySelector('body').appendChild(clickLog)
 
+      this.awaitNickname()
     }
 
     attributeChangedCallback (name, oldValue, newValue) {
@@ -83,16 +84,29 @@ customElements.define('my-quiz',
 
     }
 
+    awaitNickname () {
+      console.log('väntar på nickname i my-quiz')
+      
+      var _this = this // event lyssnaren refererar fel annars!
+
+      setTimeout(function () { // DÅLIG LÖSNING! ELEMENTET HINNER INTE SKAPAS INNAN MY-NICKNAME KOMPONENT SKAPAR ELEMENTET! async await istället??
+        const extShadowRoot = document.querySelector('my-nickname').shadowRoot
+        const nickSubmitBtn = extShadowRoot.querySelector('#setupBtn')
+        console.log ('waiting in my-quiz')
+        
+        nickSubmitBtn.addEventListener('click', () => {
+          console.log('jag såg knappen trycktes i my-quiz')
+          _this.nextQuestion()
+        })
+      }, 1)
+
+    }
+
     nextQuestion () {
       console.log('är i nextQuestion!')
       
-      // Tar emot frågan (resultat)
-
-      // avgör OM det finns fler frågor (annars gå till avslut/high score)
-
-      // väljer typ av input
-
-      // går till question event lyssnare
+      const question = document.createElement('my-quiz-question')
+      document.querySelector('body').appendChild(question)
     }
   }
 )

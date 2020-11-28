@@ -60,7 +60,7 @@ customElements.define('my-nickname',
     removeQuizSetup () {
       console.log('startar ta bort template!')
 
-      this.shadowRoot.querySelector('#nameSetup').remove()
+      document.querySelector('my-nickname').remove()
     }
   }
 )
