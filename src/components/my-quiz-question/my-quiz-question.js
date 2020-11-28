@@ -15,6 +15,13 @@ template.innerHTML = `
 <h1>EN FRÅGA!!</h1>
 `
 
+const question2 = document.createElement('template')
+question2.innerHTML = `
+<h3 id="question"></h3>
+<input type="text" placeholder="Svar" id="questionInput">
+<button type="button" id="answerBtn">Fortsätt</button>
+`
+
 /**
  * Define custom element.
  */
@@ -64,16 +71,15 @@ customElements.define('my-quiz-question',
   showQuestion () {
     console.log('är i show question')
     const obj = this.returnObject
-    const question = obj.question
-    
-    // skapar h3 element med frågan i shadow roten
-    const questionElement = document.createElement('h3')
-    this.shadowRoot.appendChild(questionElement)
-    const theQuestion = document.createTextNode(question)
-    questionElement.appendChild(theQuestion)
+    const currentQuestion = obj.question
 
-    // skapar input template
+    // skapar question template
+    this.shadowRoot.appendChild(question2.content.cloneNode(true))
 
+    // lägger in frågan i question template headern
+    const questionHeader = this.shadowRoot.querySelector('#question')
+    const questionHeaderText = document.createTextNode(currentQuestion)
+    questionHeader.appendChild(questionHeaderText)
   
     // 20 sek timern
     setTimeout(function () {
