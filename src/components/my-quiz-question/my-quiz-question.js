@@ -35,6 +35,7 @@ customElements.define('my-quiz-question',
 
     connectedCallback () {
       console.log('är i my quiz question')
+      this.getQuestion()
     }
 
     attributeChangedCallback (name, oldValue, newValue) {
@@ -45,5 +46,41 @@ customElements.define('my-quiz-question',
 
     }
 
-  }
-)
+    async getQuestion () {
+      var _this = this
+        await window.fetch('http://courselab.lnu.se/question/1').then(function (response) {
+            //console.log(response.json())
+            return response.json()
+        }).then(function (obj) {
+            //console.log(obj)
+            _this.returnObject = obj
+            _this.showQuestion()
+        }).catch(function(err) { // fångar eventuella fel
+            console.error('fel har inträffat')
+            console.error(err)
+        })
+    }
+
+  showQuestion () {
+    console.log('är i show question')
+    const obj = this.returnObject
+    const question = obj.question
+    
+    // skapar h3 element med frågan i shadow roten
+    const questionElement = document.createElement('h3')
+    this.shadowRoot.appendChild(questionElement)
+    const theQuestion = document.createTextNode(question)
+    questionElement.appendChild(theQuestion)
+
+    // skapar input template
+
+  
+    // 20 sek timern
+    setTimeout(function () {
+      alert('20 sec you lost!')
+      location.reload() // laddar om sidan!
+    }, 20000)
+
+    }
+
+    })

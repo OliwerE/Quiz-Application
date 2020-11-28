@@ -91,7 +91,7 @@ customElements.define('my-quiz',
 
       setTimeout(function () { // DÅLIG LÖSNING! ELEMENTET HINNER INTE SKAPAS INNAN MY-NICKNAME KOMPONENT SKAPAR ELEMENTET! async await istället??
         const extShadowRoot = document.querySelector('my-nickname').shadowRoot
-        const nickSubmitBtn = extShadowRoot.querySelector('#setupBtn')
+        const nickSubmitBtn =  extShadowRoot.querySelector('#setupBtn')
         console.log ('waiting in my-quiz')
         
         nickSubmitBtn.addEventListener('click', () => {
