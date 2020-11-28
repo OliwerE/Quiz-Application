@@ -161,7 +161,11 @@ returnResponse () {
 
   console.log(this._nextUrl)
 
-  this.resetQuestion()
+  var _this = this
+  setTimeout(function () {
+    _this.resetQuestion()
+  }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
+
 }
 
 resetQuestion () { // återställer frågor och tar fram nästa
