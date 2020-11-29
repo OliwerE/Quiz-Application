@@ -61,6 +61,12 @@ customElements.define('my-quiz-question',
       var _this = this
         await window.fetch(this._nextUrl).then(function (response) {
             //console.log(response.json())
+            _this._statusCode = response.status // lagrar statuskoden // lagrar statuskoden
+            
+            console.log('-----------GET-Status-Code---------')
+            console.log(_this._statusCode)
+            console.log('-----------------------------------')
+
             return response.json()
         }).then(function (obj) {
             console.log(obj)
@@ -124,7 +130,7 @@ customElements.define('my-quiz-question',
       console.log(jsonObj)
 
       var _this = this
-    await window.fetch(this._nextUrl, { // await släpper kön
+    await window.fetch(this._nextUrl, { // await släpper kön 
     method: 'Post',
     headers: {
         'Content-Type': 'application/json'
@@ -133,10 +139,15 @@ customElements.define('my-quiz-question',
     
 }).then(function (response) {
   //console.log(response.json())
+  _this._statusCode = response.status // lagrar statuskoden
+  if (response.status === 500) { // gå till high score härifrån! (temp lösning pga error 500 sista frågan!)
+    alert('YOU WIN!')
+  }
   return response.json()
 }).then(function (postResponse) {
   console.log(postResponse)
-  _this._answerResponse = postResponse // lagrar responsen i this._answerResponse
+  _this._answerResponse = postResponse
+  // // lagrar responsen i this._answerResponse
   _this.returnResponse()
 }).catch(function(err) { // fångar eventuella fel
   console.error('fel har inträffat')
@@ -152,6 +163,11 @@ console.log(this._answerResponse.nextURL)
 }
 
 returnResponse () {
+  console.log('-------POST-Status-Code------')
+  console.log(this._statusCode)
+  console.log(this._answerResponse)
+  console.log('-----------------------------')
+  if (this._statusCode === 200) {
 
   const responseElement = this.shadowRoot.querySelector('#response')
   const responseText = document.createTextNode(this._answerResponse.message)
@@ -165,6 +181,14 @@ returnResponse () {
   setTimeout(function () {
     _this.resetQuestion()
   }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
+
+} else if (this._statusCode === 400) {
+  alert('YOU LOST!')
+  location.reload() // ändra till visa highscore/ restart knapp ??
+
+} else {
+  alert('statuscode does not equal 200 or 400! statuscode: ', this._statusCode)
+}
 
 }
 
