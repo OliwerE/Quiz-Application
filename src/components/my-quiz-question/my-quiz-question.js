@@ -31,6 +31,7 @@ questionRadio.innerHTML = `
 <h3 id="question"></h3>
 
 <form id="altForm">
+<div id="altFormBtns"></div>
 <input type="button" id="continueBtn" value="Submit">
 </form>
 
@@ -134,7 +135,7 @@ customElements.define('my-quiz-question',
       let currentButton = `alt${currentValue}`
 
       // lägger till i formulär och skapar id
-      this.shadowRoot.querySelector('#altForm').appendChild(button).setAttribute('id', currentButton)
+      this.shadowRoot.querySelector('#altFormBtns').appendChild(button).setAttribute('id', currentButton)
 
       // sätter attribut
       this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('type', 'radio')
@@ -149,11 +150,11 @@ customElements.define('my-quiz-question',
       let labelQuestion = `alt` + (i + 1)
       let labelTextNode = document.createTextNode(obj.alternatives[labelQuestion])
       label.appendChild(labelTextNode)
-      this.shadowRoot.querySelector('#altForm').appendChild(label)
+      this.shadowRoot.querySelector('#altFormBtns').appendChild(label)
 
       // byter rad:
       let changeRow = document.createElement('br')
-      this.shadowRoot.querySelector('#altForm').appendChild(changeRow)
+      this.shadowRoot.querySelector('#altFormBtns').appendChild(changeRow)
 
 
 
