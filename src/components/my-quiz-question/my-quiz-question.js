@@ -30,15 +30,7 @@ questionRadio.innerHTML = `
 <div id="displayedQustion">
 <h3 id="question"></h3>
 
-<form>
-alt1: <input type="radio" name="alt" value="alt1">
-<br>
-alt2: <input type="radio" name="alt" value="alt2">
-<br>
-alt3: <input type="radio" name="alt" value="alt3">
-<br>
-alt4: <input type="radio" name="alt" value="alt4">
-<br>
+<form id="altForm">
 <input type="button" id="continueBtn" value="Submit">
 </form>
 
@@ -133,6 +125,41 @@ customElements.define('my-quiz-question',
     // skapa antal radioknappar här!
     let numOfAlt = Object.keys(obj.alternatives).length
     console.log('ANTAL ALTERNATIV!123', numOfAlt)
+
+    for (let i = 0; i < numOfAlt; i++) { // skapar lika många radioknappar som alternativ!
+
+      const button = document.createElement('input')
+
+      let currentValue = i + 1
+      let currentButton = `alt${currentValue}`
+
+      // lägger till i formulär och skapar id
+      this.shadowRoot.querySelector('#altForm').appendChild(button).setAttribute('id', currentButton)
+
+      // sätter attribut
+      this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('type', 'radio')
+      this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('name', 'alt')
+      this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('value', `alt${currentValue}`)
+
+
+
+      // skapa label för knapp
+
+      let label = document.createElement('label')
+      let labelQuestion = `alt` + (i + 1)
+      let labelTextNode = document.createTextNode(obj.alternatives[labelQuestion])
+      label.appendChild(labelTextNode)
+      this.shadowRoot.querySelector('#altForm').appendChild(label)
+
+      // byter rad:
+      let changeRow = document.createElement('br')
+      this.shadowRoot.querySelector('#altForm').appendChild(changeRow)
+
+
+
+
+
+    }
 
     }
 
