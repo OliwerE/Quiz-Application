@@ -25,6 +25,28 @@ question2.innerHTML = `
 </div>
 `
 
+const questionRadio = document.createElement('template')
+questionRadio.innerHTML = `
+<div id="displayedQustion">
+<h3 id="question"></h3>
+
+<form>
+alt1: <input type="radio" name="alt" value="alt1">
+<br>
+alt2: <input type="radio" name="alt" value="alt2">
+<br>
+alt3: <input type="radio" name="alt" value="alt3">
+<br>
+alt4: <input type="radio" name="alt" value="alt4">
+<br>
+<input type="button" id="continueBtn" value="Submit">
+</form>
+
+<!--<button type="button" id="answerBtn">Fortsätt</button>-->
+<p id="response"></p>
+</div>
+`
+
 /**
  * Define custom element.
  */
@@ -80,10 +102,18 @@ customElements.define('my-quiz-question',
     }
 
   showQuestion () {
+    console.log('------dafsd---------')
+    console.log(this.returnObject)
+    console.log(this.returnObject.alternatives)
+    console.log('------dafsd---------')
+
+
     console.log('är i show question')
     const obj = this.returnObject
     const currentQuestion = obj.question
 
+
+    if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
     // skapar question template
     this.shadowRoot.appendChild(question2.content.cloneNode(true))
 
@@ -91,7 +121,23 @@ customElements.define('my-quiz-question',
     const questionHeader = this.shadowRoot.querySelector('#question')
     const questionHeaderText = document.createTextNode(currentQuestion)
     questionHeader.appendChild(questionHeaderText)
-  
+
+    } else if (this.returnObject.alternatives !== undefined) { // om frågan är av typen radio btn
+          // skapar question template
+    this.shadowRoot.appendChild(questionRadio.content.cloneNode(true))
+    // lägger in frågan i question template headern
+    const radioQuestionHeader = this.shadowRoot.querySelector('#question')
+    const radioQuestionHeaderText = document.createTextNode(currentQuestion)
+    radioQuestionHeader.appendChild(radioQuestionHeaderText)
+
+    // skapa antal radioknappar här!
+    let numOfAlt = Object.keys(obj.alternatives).length
+    console.log('ANTAL ALTERNATIV!123', numOfAlt)
+
+    }
+
+
+
     // 20 sek timern AKTIVERA SEN!
     
     /*
@@ -108,12 +154,33 @@ customElements.define('my-quiz-question',
     questionAnswer () {
       console.log('questionAnser: här svaret väntas in och bearbetas!')
 
-      const answerBtn = this.shadowRoot.querySelector('#answerBtn')
 
+      if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
+      const answerBtn = this.shadowRoot.querySelector('#answerBtn')
       answerBtn.addEventListener('click', () => {
        var answer = this.shadowRoot.querySelector('#questionInput').value
        this.postAnswer(answer)
       })
+      } else {
+        console.log('OM DET ÄR RADIOKNAPPAR!')
+        const radiocontBtn = this.shadowRoot.querySelector('#continueBtn')
+        radiocontBtn.addEventListener('click', () => {
+          
+          const allRadioBtns = this.shadowRoot.querySelectorAll('input[name="alt"]') // alla radioknappar
+        
+          var answer
+
+          for (let radiobutton of allRadioBtns) { // går igenom och kontrollerar om en radioknapp är markerad. om någon är läggs värdet i value
+            if (radiobutton.checked) {
+              answer = radiobutton.value
+              break
+            }
+          }
+
+          this.postAnswer(answer)
+        })
+        
+      }
     }
 
     async postAnswer (userResult) {
