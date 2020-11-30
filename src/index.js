@@ -8,6 +8,7 @@
 import './components/my-quiz/'
 import './components/my-nickname/'
 import './components/my-quiz-question/'
+import './components/my-countdown-timer/'
  
 /*
 const messageContainer = document.querySelector('#messageContainer')
