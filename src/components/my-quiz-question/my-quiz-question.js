@@ -105,9 +105,16 @@ customElements.define('my-quiz-question',
     const myTimer = document.createElement('my-countdown-timer')
       document.querySelector('body').appendChild(myTimer)
 
-
+    console.log('TID LIMIT: ', this.returnObject.limit)
 
     // /create timer
+
+    // set timer attribute
+
+    document.querySelector('my-countdown-timer').setAttribute('limit', this.returnObject.limit)
+
+
+    // /set timer attribute
 
 
     console.log('är i show question')

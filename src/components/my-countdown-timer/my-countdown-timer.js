@@ -13,7 +13,7 @@ const template = document.createElement('template')
 template.innerHTML = `
 <div id="nameSetup">
 <p>Tid kvar:</p>
-<span id="countdowntimer">8</span>
+<span id="countdowntimer"></span>
 </div>
 `
 
@@ -27,7 +27,7 @@ customElements.define('my-countdown-timer',
   constructor () {
     super()
 
-    this.time = 8 // tiden att räkna ner ifrån
+    this.time = 20 // tiden att räkna ner ifrån
 
     this.attachShadow({ mode: 'open' })
       .appendChild(template.content.cloneNode(true))
@@ -35,7 +35,7 @@ customElements.define('my-countdown-timer',
   }
 
   static get observedAttributes () {
-
+    return ['limit']
   }
 
   connectedCallback () {
@@ -45,6 +45,19 @@ customElements.define('my-countdown-timer',
 
   attributeChangedCallback (name, oldValue, newValue) {
 
+    if (name === 'limit') {
+      var newLimit = Number(newValue)
+      if (Number.isInteger(newLimit) === true) { // om newValue är av typen number (förutom NaN)
+        console.log('limit fick ett nytt värde123: ', newLimit)
+        this.time = newLimit
+      }
+      
+    }
+
+    /*
+    if (newValue !== 'undefined') {
+      console.log('limit fick ett nytt värde123: ', newValue)
+    }*/
   }
 
   disconnectedCallback () {
