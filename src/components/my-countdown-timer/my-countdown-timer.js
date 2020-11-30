@@ -67,14 +67,20 @@ customElements.define('my-countdown-timer',
   beginCountdown () { // timern som räknar ner från this.time (ta bort 20 från template!)
 
     var _this = this
+   setTimeout(function () {
+    _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time // innan första sekunden tas bort!
+   }, 0)
+    
+    
     _this.timer = setInterval(function(){
+
       _this.time = _this.time - 1
       _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time
         
       if(_this.time <= 0) {
         clearInterval(_this.timer)
         console.log('tiden tog slut!!')
-        document.querySelector('my-quiz-question').ranOutOfTime()
+        document.querySelector('my-quiz-question').ranOutOfTime() // ta bort hårdkodning för annan komponent! (lägg till med attribut??)
       }
     },1000)
 

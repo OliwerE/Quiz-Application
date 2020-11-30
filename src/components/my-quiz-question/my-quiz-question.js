@@ -100,21 +100,12 @@ customElements.define('my-quiz-question',
     console.log(this.returnObject.alternatives)
     console.log('------dafsd---------')
 
-    //create timer
-
+    // countdown timer
     const myTimer = document.createElement('my-countdown-timer')
-      document.querySelector('body').appendChild(myTimer)
+      document.querySelector('body').appendChild(myTimer).setAttribute('limit', this.returnObject.limit)
 
     console.log('TID LIMIT: ', this.returnObject.limit)
 
-    // /create timer
-
-    // set timer attribute
-
-    document.querySelector('my-countdown-timer').setAttribute('limit', this.returnObject.limit)
-
-
-    // /set timer attribute
 
 
     console.log('är i show question')
@@ -230,6 +221,7 @@ customElements.define('my-quiz-question',
     async postAnswer (userResult) {
       console.log('postAnswer starts')
       console.log('anv resultat: ', userResult) // användarens resultat
+      document.querySelector('my-countdown-timer').cancelCountdown() // stopar nedräkning!
 
       var obj = {}
 
@@ -306,7 +298,6 @@ returnResponse () {
 resetQuestion () { // återställer frågor och tar fram nästa
 
   this.shadowRoot.querySelector('#displayedQustion').remove() // tar bort elementet med frågan
-  document.querySelector('my-countdown-timer').cancelCountdown() // stoppar countdown
   document.querySelector('my-countdown-timer').remove() // tar bort countdown elementet
 
 
@@ -316,6 +307,7 @@ resetQuestion () { // återställer frågor och tar fram nästa
 
 ranOutOfTime () {
   alert('Tiden tog Slut!!')
+  location.reload() // temp lösning!
 }
 
     })
