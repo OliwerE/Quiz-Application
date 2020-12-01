@@ -13,5 +13,8 @@ body h1 {
 	margin: 0 auto;
 	border-radius: 5px;
 	padding: 10px;
+	box-shadow: 0 5px 5px #0000001f, 
+	0 10px 10px #0000001f,
+	0 20px 20px #0000001f;
 }
 
