@@ -24,11 +24,11 @@ template.innerHTML = `
 <div id="my-high-score">
 <h1>HIGH SCORE:</h1>
 <ol>
+  <li id="top0"></li>
   <li id="top1"></li>
   <li id="top2"></li>
   <li id="top3"></li>
   <li id="top4"></li>
-  <li id="top5"></li>
 </ol>
 </div>
 `
@@ -105,7 +105,7 @@ customElements.define('my-high-score',
 
       var json2 = {
         "username": "user2",
-        "text": "sometext2"
+        "score": "20"
       }
       console.log(json2)
 
@@ -170,13 +170,71 @@ customElements.define('my-high-score',
 
       //window.localStorage.setItem('my-high-score', newScoreArray)
        // tar bort:
-      //playerScoreObject = {}
-      //var newScoreArray = []
+      playerScoreObject = {}
+      var newScoreArray = []
     } else {
-      var currentHighScoreList2 = window.localStorage.getItem('my-high-score')
-    
+      console.log('är i else!')
+      var currentHighScore = window.localStorage.getItem('my-high-score')
+      var parseCurrentHighScore = JSON.parse(currentHighScore)
+      var newPlayerScore = {}
+
+      newPlayerScore.username = 'johan'
+      newPlayerScore.score = '5'
+
+      parseCurrentHighScore.push(newPlayerScore)
+
+      var scoreString = JSON.stringify(parseCurrentHighScore)
+
+      console.log(newPlayerScore)
+      console.log(parseCurrentHighScore)
+      console.log('striiing')
+      console.log(scoreString)
+
+      //window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
+      newPlayerScore = {}
+
 
     }
+
+    var storedData = window.localStorage.getItem('my-high-score')
+
+    var storedScore = JSON.parse(storedData)
+    var lengthStoredScore = Object.keys(storedScore).length
+
+
+    console.log('the array----------------')
+    console.log(storedScore)
+    console.log(lengthStoredScore)
+
+    //hantera ordning: 
+    if (lengthStoredScore <= 5) {
+      console.log('5 eller mindre scores! endast sortera!')
+
+      console.log(storedScore[0].score)
+      console.log(storedScore[1].score)
+    }
+
+    // sorterar ordningen i array baserat på spelarnas score
+    var sorting = storedScore.sort(function (a, b) {
+      return a.score - b.score
+    })
+
+    console.log(sorting)
+
+    // om mer än 5 scores
+    if (lengthStoredScore > 5) {
+      console.log('DEBUG det är mer än 5 scores! klipper ut 5 första (alla redan sorterade)')
+      storedScore = storedScore.splice(0, 5) // om det finns mer än 5 scores ersätts storedScore med endast 5 första score objekten! (efter att de sorterats i rätt ordning!)
+    }
+
+
+    // lägg till namn och score i listan:
+
+    for (let i = 0; i < lengthStoredScore; i++) { // varje score skrivs in i high score!
+      console.log('en score')
+    }
+
+
   }
 
   }
