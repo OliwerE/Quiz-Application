@@ -42,8 +42,6 @@ customElements.define('my-high-score',
 
   constructor () {
     super()
-    //this.highScore = window.localStorage.getItem('my-high-Score')
-    //this.newHighScore = window.localStorage.getItem('my-new-high-Score')
 
     this.attachShadow({ mode: 'open' })
       .appendChild(template.content.cloneNode(true))
@@ -99,76 +97,6 @@ customElements.define('my-high-score',
       // skapar array string i local storage:
       window.localStorage.setItem('my-high-score', stringArray)
 
-
-      /*
-      console.log(json1)
-
-      var json2 = {
-        "username": "user2",
-        "score": "20"
-      }
-      console.log(json2)
-
-
-      console.log('lägger till json 1')
-      newScoreArray.push(json1)
-      console.log(newScoreArray)
-
-      console.log('lägger till json 2')
-      newScoreArray.push(json2)
-      console.log(newScoreArray)
-
-      console.log('gör om till string')
-      var stringArray = JSON.stringify(newScoreArray)// newScoreArray.toString()
-      console.log(stringArray)
-
-      console.log('-------tbx till array--------')
-
-      //var splittadString = stringArray.split(', ')
-      var splittadString = JSON.parse(stringArray)
-
-      console.log(splittadString)
-
-      console.log(splittadString[0]) // problem här
-
-      console.log('--------------------')
-      */
-
-/*
-      // skapar unika spelarens objekt (ska göras om till JSON)
-      var playerScoreObject = {}
-      
-      // lägger till username och score
-      playerScoreObject.username = nickname
-      playerScoreObject.score = newScore
-      console.log('INNAN JSON: ', playerScoreObject)
-
-      var playerJson = JSON.stringify(playerScoreObject)
-      console.log('EFTER JSON: ', playerJson)
-
-      newScoreArray.push(playerJson)
-      console.log('I ARRAY: ', newScoreArray)
-      newScoreArray.push('test321')
-      // test hur det ser ut:
-      console.log(playerScoreObject)
-*/
-      // sätts i local storage
-
-
-
-
-      /*
-      console.log(newScoreArray)
-      var stringen = newScoreArray.toString()
-      console.log(stringen)
-
-      console.log('json parse: ')
-      var spliten = stringen.split()
-
-      console.log(spliten[0])
-      */
-
-      //window.localStorage.setItem('my-high-score', newScoreArray)
        // tar bort:
       playerScoreObject = {}
       var newScoreArray = []

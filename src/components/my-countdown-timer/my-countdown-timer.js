@@ -51,13 +51,7 @@ customElements.define('my-countdown-timer',
         console.log('limit fick ett nytt värde123: ', newLimit)
         this.time = newLimit
       }
-      
     }
-
-    /*
-    if (newValue !== 'undefined') {
-      console.log('limit fick ett nytt värde123: ', newValue)
-    }*/
   }
 
   disconnectedCallback () {

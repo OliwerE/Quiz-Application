@@ -15,8 +15,8 @@ template.innerHTML = `
 <h1>EN FRÅGA!!</h1>
 `
 
-const question2 = document.createElement('template')
-question2.innerHTML = `
+const questionInput = document.createElement('template')
+questionInput.innerHTML = `
 <div id="displayedQustion">
 <h3 id="question"></h3>
 <input type="text" placeholder="Svar" id="questionInput">
@@ -84,7 +84,7 @@ customElements.define('my-quiz-question',
             console.log(_this._statusCode)
             console.log('-----------------------------------')
 
-            return response.json()
+            return response.json() // Detta som ger fel i slutet av quiz!
         }).then(function (obj) {
           if (_this._getCount === 0) {
               _this.totTimeCounter() // counts entire round
@@ -122,7 +122,7 @@ customElements.define('my-quiz-question',
 
     if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
     // skapar question template
-    this.shadowRoot.appendChild(question2.content.cloneNode(true))
+    this.shadowRoot.appendChild(questionInput.content.cloneNode(true))
 
     // lägger in frågan i question template headern
     const questionHeader = this.shadowRoot.querySelector('#question')
@@ -169,25 +169,8 @@ customElements.define('my-quiz-question',
       // byter rad:
       let changeRow = document.createElement('br')
       this.shadowRoot.querySelector('#altFormBtns').appendChild(changeRow)
-
-
-
-
-
     }
-
-    }
-
-
-
-    // 20 sek timern AKTIVERA SEN!
-    
-    /*
-    setTimeout(function () {
-      alert('20 sec you lost!')
-      location.reload() // laddar om sidan!
-    }, 20000)
-    */
+  }
 
 
     this.questionAnswer()
@@ -250,28 +233,6 @@ customElements.define('my-quiz-question',
 }).then(function (response) {
   //console.log(response.json())
   _this._statusCode = response.status // lagrar statuskoden
-  console.log('--------respons---------')
-  console.log('--------respons---------')
-
-// 500 här innan!!
-/*
-if (response.status === 500) { // gå till high score härifrån! (temp lösning pga error 500 sista frågan!)
-  //alert('YOU WIN!')
-
-  // lägger till resultat i local storage:
-
-  window.localStorage.setItem('my-new-high-score', '10') // antal sekunder det tog att svara på frågorna
-  
-  // tar bort timer och frågan
-  document.querySelector('my-quiz-question').remove()
-  document.querySelector('my-countdown-timer').remove()
-
-  // skapar high score element
-  const myHighScore = document.createElement('my-high-score')
-  document.querySelector('body').appendChild(myHighScore)
-
-}
-*/
   return response.json()
 }).then(function (postResponse) {
   console.log(postResponse)
@@ -282,27 +243,15 @@ if (response.status === 500) { // gå till high score härifrån! (temp lösning
   console.error('fel har inträffat')
   console.error(err)
 })
-  
-// lagra next URL
-
-/*
-console.log('test')
-console.log(this._answerResponse.nextURL)
-*/
 }
 
 returnResponse () {
   if (this._answerResponse.nextURL === undefined) { // gå till high score härifrån! (temp lösning pga error 500 sista frågan!)
-    //alert('YOU WIN!')
 
+    this.stopTotTimeCounter() // stoppar timer
     // lägger till resultat i local storage:
-    this.stopTotTimeCounter()
     window.localStorage.setItem('my-new-high-score', this.totQuizTime) // antal sekunder det tog att svara på frågorna
-    
-    // tar bort timer och frågan
-    /*document.querySelector('my-quiz-question').remove()
-    document.querySelector('my-countdown-timer').remove()
-*/
+
     // skapar high score element
     const myHighScore = document.createElement('my-high-score')
     document.querySelector('body').appendChild(myHighScore)
