@@ -178,8 +178,8 @@ customElements.define('my-high-score',
       var parseCurrentHighScore = JSON.parse(currentHighScore)
       var newPlayerScore = {}
 
-      newPlayerScore.username = 'johan'
-      newPlayerScore.score = '5'
+      newPlayerScore.username = nickname
+      newPlayerScore.score = newScore
 
       parseCurrentHighScore.push(newPlayerScore)
 
@@ -190,7 +190,7 @@ customElements.define('my-high-score',
       console.log('striiing')
       console.log(scoreString)
 
-      //window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
+      window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
       newPlayerScore = {}
 
 
@@ -211,7 +211,7 @@ customElements.define('my-high-score',
       console.log('5 eller mindre scores! endast sortera!')
 
       console.log(storedScore[0].score)
-      console.log(storedScore[1].score)
+      //console.log(storedScore[1].score)
     }
 
     // sorterar ordningen i array baserat på spelarnas score
@@ -231,7 +231,12 @@ customElements.define('my-high-score',
     // lägg till namn och score i listan:
 
     for (let i = 0; i < lengthStoredScore; i++) { // varje score skrivs in i high score!
-      console.log('en score')
+      var topNumber = '#top' + i
+      console.log(topNumber)
+      var topElement = this.shadowRoot.querySelector(topNumber)
+      var topText = 'Name: ' + storedScore[i].username + ' Score: ' + storedScore[i].score
+      var topTextNode = document.createTextNode(topText)
+      topElement.appendChild(topTextNode)
     }
 
 
