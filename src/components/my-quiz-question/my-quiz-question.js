@@ -48,6 +48,8 @@ customElements.define('my-quiz-question',
 
     constructor () {
       super()
+      this._getCount = 0 // antal frågor som tagits emot
+      this.totQuizTime = 0 // användares totala tid
       this._nextUrl = 'http://courselab.lnu.se/question/1' // första frågan
 
       this.attachShadow({ mode: 'open' })
@@ -84,9 +86,14 @@ customElements.define('my-quiz-question',
 
             return response.json()
         }).then(function (obj) {
+          if (_this._getCount === 0) {
+              _this.totTimeCounter() // counts entire round
+          }
+          _this._getCount = _this._getCount + 1
             console.log(obj)
             _this.returnObject = obj
             _this._nextUrl = obj.nextURL
+
             _this.showQuestion()
         }).catch(function(err) { // fångar eventuella fel
             console.error('fel har inträffat')
@@ -289,8 +296,8 @@ returnResponse () {
     //alert('YOU WIN!')
 
     // lägger till resultat i local storage:
-
-    window.localStorage.setItem('my-new-high-score', '2') // antal sekunder det tog att svara på frågorna
+    this.stopTotTimeCounter()
+    window.localStorage.setItem('my-new-high-score', this.totQuizTime) // antal sekunder det tog att svara på frågorna
     
     // tar bort timer och frågan
     /*document.querySelector('my-quiz-question').remove()
@@ -345,6 +352,18 @@ resetQuestion () { // återställer frågor och tar fram nästa
 ranOutOfTime () {
   alert('Tiden tog Slut!!')
   location.reload() // temp lösning!
+}
+
+totTimeCounter () {
+  var _this = this
+  this.quizLengthTimer = setInterval(()=> {
+    _this.totQuizTime = _this.totQuizTime + 1
+    console.log('sekunder: ', _this.totQuizTime)
+  }, 1000)
+}
+
+stopTotTimeCounter () {
+  clearInterval(this.quizLengthTimer)
 }
 
     })
