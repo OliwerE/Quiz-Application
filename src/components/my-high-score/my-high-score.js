@@ -16,9 +16,10 @@ template.innerHTML = `
     background-color: green;
     width: 250px;
     height: 250px;
+    margin: 0 auto;
 }
 #my-high-score h1 {
-    text-align: center;
+  text-align: center;
 }
 </style>
 <div id="my-high-score">

@@ -11,8 +11,15 @@
 
 const form = document.createElement('template')
 form.innerHTML = `
+<style>
+#nameSetup {
+  width: 300px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+</style>
 <div id="nameSetup">
-<h2>Skriv in ditt namn!</h2>
+<h3>Ange namn:</h3>
 <input type="text" placeholder="Namn" id="myInput">
 <button type="button" id="setupBtn">Fortsätt</button>
 </div>

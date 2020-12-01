@@ -109,7 +109,7 @@ customElements.define('my-quiz-question',
 
     // countdown timer
     const myTimer = document.createElement('my-countdown-timer')
-      document.querySelector('body').appendChild(myTimer).setAttribute('limit', this.returnObject.limit)
+      document.querySelector('#container').appendChild(myTimer).setAttribute('limit', this.returnObject.limit)
 
     console.log('TID LIMIT: ', this.returnObject.limit)
 
@@ -254,7 +254,7 @@ returnResponse () {
 
     // skapar high score element
     const myHighScore = document.createElement('my-high-score')
-    document.querySelector('body').appendChild(myHighScore)
+    document.querySelector('#container').appendChild(myHighScore)
   
   }
 

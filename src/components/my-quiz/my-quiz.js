@@ -20,10 +20,12 @@ setup.innerHTML = `
 
 const template = document.createElement('template')
 template.innerHTML = `
-  <style>
-
-  </style>
-<p>quiz!!</p>
+<style>
+h1 {
+  text-align: center;
+}
+</style>
+<h1>Quiz</h1>
 `
 
 /**
@@ -49,7 +51,7 @@ customElements.define('my-quiz',
 
       // skapar nickname med my-nickname komponent!
       const clickLog = document.createElement('my-nickname')
-      document.querySelector('body').appendChild(clickLog)
+      document.querySelector('#container').appendChild(clickLog)
 
       this.awaitNickname()
     }
@@ -84,7 +86,7 @@ customElements.define('my-quiz',
       console.log('är i nextQuestion!')
       
       const question = document.createElement('my-quiz-question')
-      document.querySelector('body').appendChild(question)
+      document.querySelector('#container').appendChild(question)
     }
   }
 )
