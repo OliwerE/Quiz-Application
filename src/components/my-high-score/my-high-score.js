@@ -189,7 +189,7 @@ customElements.define('my-high-score',
       console.log(parseCurrentHighScore)
       console.log('striiing')
       console.log(scoreString)
-
+      
       window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
       newPlayerScore = {}
 
@@ -223,8 +223,16 @@ customElements.define('my-high-score',
 
     // om mer än 5 scores
     if (lengthStoredScore > 5) {
+      console.log('-------mer än 5 startar-------')
       console.log('DEBUG det är mer än 5 scores! klipper ut 5 första (alla redan sorterade)')
       storedScore = storedScore.splice(0, 5) // om det finns mer än 5 scores ersätts storedScore med endast 5 första score objekten! (efter att de sorterats i rätt ordning!)
+      lengthStoredScore = 5 // tar bort bugg
+      console.log(storedScore)
+      console.log('-------mer än 5 slutar-------')
+      // skriver över local storage med endast 5 scores:
+      var stringifyFiveScores = JSON.stringify(storedScore)
+
+      window.localStorage.setItem('my-high-score', stringifyFiveScores)
     }
 
 

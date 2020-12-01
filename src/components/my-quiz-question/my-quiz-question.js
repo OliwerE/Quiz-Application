@@ -290,7 +290,7 @@ returnResponse () {
 
     // lägger till resultat i local storage:
 
-    window.localStorage.setItem('my-new-high-score', '1') // antal sekunder det tog att svara på frågorna
+    window.localStorage.setItem('my-new-high-score', '2') // antal sekunder det tog att svara på frågorna
     
     // tar bort timer och frågan
     /*document.querySelector('my-quiz-question').remove()
