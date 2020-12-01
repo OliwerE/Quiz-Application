@@ -55,6 +55,7 @@ customElements.define('my-high-score',
   }
 
   connectedCallback () {
+    console.log('-----MY HIGH SCORE STARTAR!!------')
     this.compareResult()
   }
 
@@ -71,11 +72,69 @@ customElements.define('my-high-score',
     var newScore = window.localStorage.getItem('my-new-high-score') // nya higshcore ändra även denna med attribut!
     var currentHighScoreList = window.localStorage.getItem('my-high-score')
 
-    if (currentHighScoreList === null) {
+    if (currentHighScoreList === null) { // om local storage inte har high score lista
       
       // skapar resultatets array
       var newScoreArray = []
       
+      console.log(newScoreArray)
+
+      //json object
+      var playerScoreObject = {}
+
+      playerScoreObject.username = nickname
+      playerScoreObject.score = newScore
+
+      console.log('----JSON-----')
+      console.log(playerScoreObject)
+      console.log('----JSON-----')
+
+      newScoreArray.push(playerScoreObject)
+      console.log(newScoreArray)
+
+      console.log('gör om array till string-----------')
+      var stringArray = JSON.stringify(newScoreArray)
+      console.log(stringArray)
+
+      // skapar array string i local storage:
+      window.localStorage.setItem('my-high-score', stringArray)
+
+
+      /*
+      console.log(json1)
+
+      var json2 = {
+        "username": "user2",
+        "text": "sometext2"
+      }
+      console.log(json2)
+
+
+      console.log('lägger till json 1')
+      newScoreArray.push(json1)
+      console.log(newScoreArray)
+
+      console.log('lägger till json 2')
+      newScoreArray.push(json2)
+      console.log(newScoreArray)
+
+      console.log('gör om till string')
+      var stringArray = JSON.stringify(newScoreArray)// newScoreArray.toString()
+      console.log(stringArray)
+
+      console.log('-------tbx till array--------')
+
+      //var splittadString = stringArray.split(', ')
+      var splittadString = JSON.parse(stringArray)
+
+      console.log(splittadString)
+
+      console.log(splittadString[0]) // problem här
+
+      console.log('--------------------')
+      */
+
+/*
       // skapar unika spelarens objekt (ska göras om till JSON)
       var playerScoreObject = {}
       
@@ -89,11 +148,34 @@ customElements.define('my-high-score',
 
       newScoreArray.push(playerJson)
       console.log('I ARRAY: ', newScoreArray)
-
+      newScoreArray.push('test321')
       // test hur det ser ut:
       console.log(playerScoreObject)
+*/
+      // sätts i local storage
+
+
+
+
+      /*
+      console.log(newScoreArray)
+      var stringen = newScoreArray.toString()
+      console.log(stringen)
+
+      console.log('json parse: ')
+      var spliten = stringen.split()
+
+      console.log(spliten[0])
+      */
+
+      //window.localStorage.setItem('my-high-score', newScoreArray)
+       // tar bort:
+      //playerScoreObject = {}
+      //var newScoreArray = []
     } else {
-      // jämför resultatet med listans!
+      var currentHighScoreList2 = window.localStorage.getItem('my-high-score')
+    
+
     }
   }
 
