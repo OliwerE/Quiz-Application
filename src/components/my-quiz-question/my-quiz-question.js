@@ -244,7 +244,20 @@ customElements.define('my-quiz-question',
   //console.log(response.json())
   _this._statusCode = response.status // lagrar statuskoden
   if (response.status === 500) { // gå till high score härifrån! (temp lösning pga error 500 sista frågan!)
-    alert('YOU WIN!')
+    //alert('YOU WIN!')
+
+    // lägger till resultat i local storage:
+
+    window.localStorage.setItem('my-new-high-score', '10') // antal sekunder det tog att svara på frågorna
+    
+    // tar bort timer och frågan
+    document.querySelector('my-quiz-question').remove()
+    document.querySelector('my-countdown-timer').remove()
+
+    // skapar high score element
+    const myHighScore = document.createElement('my-high-score')
+    document.querySelector('body').appendChild(myHighScore)
+  
   }
   return response.json()
 }).then(function (postResponse) {

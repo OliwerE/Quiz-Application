@@ -42,6 +42,8 @@ customElements.define('my-high-score',
 
   constructor () {
     super()
+    //this.highScore = window.localStorage.getItem('my-high-Score')
+    //this.newHighScore = window.localStorage.getItem('my-new-high-Score')
 
     this.attachShadow({ mode: 'open' })
       .appendChild(template.content.cloneNode(true))
@@ -53,10 +55,7 @@ customElements.define('my-high-score',
   }
 
   connectedCallback () {
-
-
-
-
+    this.compareResult()
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -65,6 +64,37 @@ customElements.define('my-high-score',
 
   disconnectedCallback () {
 
+  }
+
+  compareResult () {
+    var nickname = window.localStorage.getItem('my-nickname') // får namnet, fixa attribut för att ändra vilken key namnet finns i (om annan komponent skulle användas!)
+    var newScore = window.localStorage.getItem('my-new-high-score') // nya higshcore ändra även denna med attribut!
+    var currentHighScoreList = window.localStorage.getItem('my-high-score')
+
+    if (currentHighScoreList === null) {
+      
+      // skapar resultatets array
+      var newScoreArray = []
+      
+      // skapar unika spelarens objekt (ska göras om till JSON)
+      var playerScoreObject = {}
+      
+      // lägger till username och score
+      playerScoreObject.username = nickname
+      playerScoreObject.score = newScore
+      console.log('INNAN JSON: ', playerScoreObject)
+
+      var playerJson = JSON.stringify(playerScoreObject)
+      console.log('EFTER JSON: ', playerJson)
+
+      newScoreArray.push(playerJson)
+      console.log('I ARRAY: ', newScoreArray)
+
+      // test hur det ser ut:
+      console.log(playerScoreObject)
+    } else {
+      // jämför resultatet med listans!
+    }
   }
 
   }

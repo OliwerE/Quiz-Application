@@ -44,7 +44,7 @@ customElements.define('my-nickname',
           setupBtn.addEventListener('click', () => { // ta bort denna event lyssnare när den är färdig!
             const inputValue = this.shadowRoot.querySelector('#myInput').value
             console.log(inputValue)
-            document.cookie = inputValue  // Temp lösning! sparar som cookie!
+            window.localStorage.setItem('my-nickname', inputValue)
             this.removeQuizSetup()
           })
     }
