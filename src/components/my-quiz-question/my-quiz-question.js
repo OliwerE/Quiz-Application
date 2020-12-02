@@ -12,7 +12,7 @@
 
 const template = document.createElement('template')
 template.innerHTML = `
-<h1>EN FRÅGA!!</h1>
+<h1>Fråga:</h1>
 `
 
 const questionInput = document.createElement('template')
@@ -65,6 +65,7 @@ customElements.define('my-quiz-question',
 
     connectedCallback () {
       console.log('är i my quiz question')
+      this.firstUrlCheck()
       this.getQuestion()
     }
 
@@ -86,7 +87,7 @@ customElements.define('my-quiz-question',
             console.log(_this._statusCode)
             console.log('-----------------------------------')
 
-            return response.json() // Detta som ger fel i slutet av quiz!
+            return response.json()
         }).then(function (obj) {
           if (_this._getCount === 0) {
               _this.totTimeCounter() // counts entire round
@@ -314,7 +315,8 @@ returnResponse () {
 
   var _this = this
   setTimeout(function () {
-    _this.restartmyQuiz()
+    document.querySelector('my-quiz').restartmyQuiz()
+    //_this.restartmyQuiz()
   }, 1500)
 
 
@@ -335,7 +337,7 @@ resetQuestion () { // återställer frågor och tar fram nästa
 
 }
 
-ranOutOfTime () {
+myCountdownTimerRanOutOfTime () {
   const responseElement = this.shadowRoot.querySelector('#response')
   const responseText = document.createTextNode('Time ran out!')
   responseElement.appendChild(responseText)
@@ -343,7 +345,8 @@ ranOutOfTime () {
   var _this = this
   setTimeout(function () {
     console.log('är här!!876')
-    _this.restartmyQuiz()
+    document.querySelector('my-quiz').restartmyQuiz()
+    //_this.restartmyQuiz()
   }, 1500)
 
 }
@@ -366,28 +369,6 @@ firstUrlCheck() {
   } else {
     this._nextUrl = this._attributeUrl // om ett attribut används!
   }
-}
-
-restartmyQuiz () {
-
-  // stoppar tiden
-  clearInterval(this.quizLengthTimer)
-  // återställer tiden:
-  this.totQuizTime = 0
-
-  // väljer och sätter start url
-  this.firstUrlCheck()
-
-  // återställer getCount
-  this._getcount = 0
-
-  // tar bort element
- document.querySelector('my-quiz-question').remove()
- document.querySelector('my-countdown-timer').remove()
-
-  //startar igen
-  document.querySelector('my-quiz').connectedCallback()
-
 }
 
 })

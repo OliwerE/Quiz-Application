@@ -27,6 +27,7 @@ customElements.define('my-countdown-timer',
   constructor () {
     super()
 
+    this._ranOutOfTime = 'my-quiz-question'
     this.time = 20 // tiden att räkna ner ifrån
 
     this.attachShadow({ mode: 'open' })
@@ -35,7 +36,7 @@ customElements.define('my-countdown-timer',
   }
 
   static get observedAttributes () {
-    return ['limit']
+    return ['limit', 'timeRanOut']
   }
 
   connectedCallback () {
@@ -51,6 +52,8 @@ customElements.define('my-countdown-timer',
         console.log('limit fick ett nytt värde123: ', newLimit)
         this.time = newLimit
       }
+    } else if (name === 'timeRanOut') { // ev kontrollera att attributet är ett id??
+      this._ranOutOfTime = newValue
     }
   }
 
@@ -74,7 +77,7 @@ customElements.define('my-countdown-timer',
       if(_this.time <= 0) {
         clearInterval(_this.timer)
         console.log('tiden tog slut!!')
-        document.querySelector('my-quiz-question').ranOutOfTime() // ta bort hårdkodning för annan komponent! (lägg till med attribut??)
+        document.querySelector(_this._ranOutOfTime).myCountdownTimerRanOutOfTime() // ta bort hårdkodning för annan komponent! (lägg till med attribut??)
       }
     },1000)
 

@@ -76,25 +76,39 @@ customElements.define('my-quiz',
         
         nickSubmitBtn.addEventListener('click', () => {
           console.log('jag såg knappen trycktes i my-quiz')
-          _this.nextQuestion()
+          _this.firstQuestion()
         })
 
         const enterBtn = extShadowRoot.querySelector('#myInput')
 
         enterBtn.addEventListener('keypress', (e)=> {
           if (e.key === 'Enter') {
-            _this.nextQuestion()
+            _this.firstQuestion()
           }
         })
       }, 1)
 
     }
 
-    nextQuestion () {
+    firstQuestion () {
       console.log('är i nextQuestion!')
       
       const question = document.createElement('my-quiz-question')
       document.querySelector('#container').appendChild(question)
+    }
+
+    restartmyQuiz () {
+
+    // stoppar total tid räknaren
+    document.querySelector('my-quiz-question').stopTotTimeCounter()
+
+    // tar bort element
+    document.querySelector('my-quiz-question').remove()
+    document.querySelector('my-countdown-timer').remove()
+    
+    //startar igen
+    this.connectedCallback()
+    
     }
   }
 )
