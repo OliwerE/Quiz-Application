@@ -19,7 +19,7 @@ const questionInput = document.createElement('template')
 questionInput.innerHTML = `
 <div id="displayedQustion">
 <h3 id="question"></h3>
-<input type="text" placeholder="Svar" id="questionInput">
+<input type="text" placeholder="Svar" id="questionInput" maxlength="20">
 <button type="button" id="answerBtn">Fortsätt</button>
 <p id="response"></p>
 </div>

@@ -20,7 +20,7 @@ form.innerHTML = `
 </style>
 <div id="nameSetup">
 <h3>Ange namn:</h3>
-<input type="text" placeholder="Namn" id="myInput">
+<input type="text" placeholder="Namn" id="myInput" maxlength="20">
 <button type="button" id="setupBtn">Fortsätt</button>
 </div>
 `
