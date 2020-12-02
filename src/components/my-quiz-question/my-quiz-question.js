@@ -50,6 +50,8 @@ customElements.define('my-quiz-question',
       super()
       this._getCount = 0 // antal frågor som tagits emot
       this.totQuizTime = 0 // användares totala tid
+      this._firstUrl = 'http://courselab.lnu.se/question/1' // Används när spelet ska starta om! // denna får INTE ÄNDRAS!
+      this._attributeUrl = 'http://courselab.lnu.se/question/1'
       this._nextUrl = 'http://courselab.lnu.se/question/1' // första frågan
 
       this.attachShadow({ mode: 'open' })
@@ -58,7 +60,7 @@ customElements.define('my-quiz-question',
     }
 
     static get observedAttributes () {
-
+      // attribute url fixa!
     }
 
     connectedCallback () {
@@ -67,7 +69,7 @@ customElements.define('my-quiz-question',
     }
 
     attributeChangedCallback (name, oldValue, newValue) {
-
+      // attribute url fixa!
     }
 
     disconnectedCallback () {
@@ -303,8 +305,18 @@ returnResponse () {
   }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
 
 } else if (this._statusCode === 400) {
-  alert('YOU LOST!')
-  location.reload() // ändra till visa highscore/ restart knapp ??
+  //alert('YOU LOST!')
+  //location.reload() // ändra till visa highscore/ restart knapp ??
+  const responseElement = this.shadowRoot.querySelector('#response')
+  const responseText = document.createTextNode(this._answerResponse.message)
+  responseElement.appendChild(responseText)
+  
+
+  var _this = this
+  setTimeout(function () {
+    _this.restartmyQuiz()
+  }, 1500)
+
 
 } else {
   alert('statuscode does not equal 200 or 400! statuscode: ', this._statusCode)
@@ -320,12 +332,20 @@ resetQuestion () { // återställer frågor och tar fram nästa
   if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
   this.getQuestion()
   }
-  
+
 }
 
 ranOutOfTime () {
-  alert('Tiden tog Slut!!')
-  location.reload() // temp lösning!
+  const responseElement = this.shadowRoot.querySelector('#response')
+  const responseText = document.createTextNode('Time ran out!')
+  responseElement.appendChild(responseText)
+  
+  var _this = this
+  setTimeout(function () {
+    console.log('är här!!876')
+    _this.restartmyQuiz()
+  }, 1500)
+
 }
 
 totTimeCounter () {
@@ -340,4 +360,34 @@ stopTotTimeCounter () {
   clearInterval(this.quizLengthTimer)
 }
 
-    })
+firstUrlCheck() {
+  if (this._firstUrl === this._attributeUrl) {
+    this._nextUrl = this._firstUrl // om inget attribut används!
+  } else {
+    this._nextUrl = this._attributeUrl // om ett attribut används!
+  }
+}
+
+restartmyQuiz () {
+
+  // stoppar tiden
+  clearInterval(this.quizLengthTimer)
+  // återställer tiden:
+  this.totQuizTime = 0
+
+  // väljer och sätter start url
+  this.firstUrlCheck()
+
+  // återställer getCount
+  this._getcount = 0
+
+  // tar bort element
+ document.querySelector('my-quiz-question').remove()
+ document.querySelector('my-countdown-timer').remove()
+
+  //startar igen
+  document.querySelector('my-quiz').connectedCallback()
+
+}
+
+})
