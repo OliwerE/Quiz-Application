@@ -97,6 +97,20 @@ customElements.define('my-quiz',
       document.querySelector('#container').appendChild(question)
     }
 
+    myCountdownTimerRanOutOfTime () {
+      const responseElement = document.querySelector('my-quiz-question').shadowRoot.querySelector('#response')
+      const responseText = document.createTextNode('Time ran out!')
+      responseElement.appendChild(responseText)
+      
+      var _this = this
+      setTimeout(function () {
+        console.log('är här!!876')
+        document.querySelector('my-quiz').restartmyQuiz()
+        //_this.restartmyQuiz()
+      }, 1500)
+    
+    }
+
     restartmyQuiz () {
 
     // stoppar total tid räknaren

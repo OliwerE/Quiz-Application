@@ -337,20 +337,6 @@ resetQuestion () { // återställer frågor och tar fram nästa
 
 }
 
-myCountdownTimerRanOutOfTime () {
-  const responseElement = this.shadowRoot.querySelector('#response')
-  const responseText = document.createTextNode('Time ran out!')
-  responseElement.appendChild(responseText)
-  
-  var _this = this
-  setTimeout(function () {
-    console.log('är här!!876')
-    document.querySelector('my-quiz').restartmyQuiz()
-    //_this.restartmyQuiz()
-  }, 1500)
-
-}
-
 totTimeCounter () {
   var _this = this
   this.quizLengthTimer = setInterval(()=> {

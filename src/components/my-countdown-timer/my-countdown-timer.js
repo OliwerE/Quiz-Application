@@ -27,7 +27,7 @@ customElements.define('my-countdown-timer',
   constructor () {
     super()
 
-    this._ranOutOfTime = 'my-quiz-question'
+    this._ranOutOfTime = 'my-quiz'
     this.time = 20 // tiden att räkna ner ifrån
 
     this.attachShadow({ mode: 'open' })
