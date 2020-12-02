@@ -259,24 +259,35 @@ customElements.define('my-quiz-question',
 }
 
 returnResponse () {
-  if (this._answerResponse.nextURL === undefined) { // gå till high score härifrån! (temp lösning pga error 500 sista frågan!)
+  console.log('-------POST-Status-Code------')
+  console.log(this._statusCode)
+  console.log(this._answerResponse)
+  console.log('-----------------------------')
+  if (this._statusCode === 200 && this._answerResponse.nextURL === undefined) { // gör både denna och nästa if !! felet som sker när den slutar!
 
     this.stopTotTimeCounter() // stoppar timer
     // lägger till resultat i local storage:
     window.localStorage.setItem('my-new-high-score', this.totQuizTime) // antal sekunder det tog att svara på frågorna
 
-    // skapar high score element
-    const myHighScore = document.createElement('my-high-score')
-    document.querySelector('#container').appendChild(myHighScore)
+
+    const responseElement = this.shadowRoot.querySelector('#response')
+    const responseText = document.createTextNode(this._answerResponse.message)
+    responseElement.appendChild(responseText)
+
+    var _this = this
+    setTimeout(function () {
+      _this.resetQuestion()
+    
+      // skapar high score element
+      const myHighScore = document.createElement('my-high-score')
+      document.querySelector('#container').appendChild(myHighScore)
+
+    }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
+
+
+
   
-  }
-
-
-  console.log('-------POST-Status-Code------')
-  console.log(this._statusCode)
-  console.log(this._answerResponse)
-  console.log('-----------------------------')
-  if (this._statusCode === 200) {
+  } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
 
   const responseElement = this.shadowRoot.querySelector('#response')
   const responseText = document.createTextNode(this._answerResponse.message)
@@ -306,9 +317,10 @@ resetQuestion () { // återställer frågor och tar fram nästa
   this.shadowRoot.querySelector('#displayedQustion').remove() // tar bort elementet med frågan
   document.querySelector('my-countdown-timer').remove() // tar bort countdown elementet
 
-
+  if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
   this.getQuestion()
-
+  }
+  
 }
 
 ranOutOfTime () {
