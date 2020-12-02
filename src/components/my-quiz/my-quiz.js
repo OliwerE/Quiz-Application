@@ -9,15 +9,6 @@
  * Define template.
  */
 
-const setup = document.createElement('template')
-setup.innerHTML = `
-<div id="nameSetup">
-<h2>Skriv in ditt namn!</h2>
-<input type="text" placeholder="Namn" id="myInput">
-<button type="button" id="setupBtn">Fortsätt</button>
-</div>
-`
-
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
