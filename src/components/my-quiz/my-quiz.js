@@ -152,6 +152,8 @@ customElements.define('my-quiz',
     }
 
     showHighScore() {
+      // ta bort text
+      document.querySelector('my-quiz-question').shadowRoot.querySelector('#questionTitle').remove()
       // skapar high score element
       const myHighScore = document.createElement('my-high-score')
       document.querySelector('#container').appendChild(myHighScore)

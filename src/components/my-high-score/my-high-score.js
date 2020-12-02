@@ -12,25 +12,58 @@
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
-#my-high-score {
-    background-color: green;
-    width: 250px;
-    height: 250px;
-    margin: 0 auto;
+#scoreTable {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
 }
-#my-high-score h1 {
+
+#scoreTable td {
+  text-align: center;
+
+  border: 1px solid black;
+}
+
+h1, h2 {
   text-align: center;
 }
 </style>
 <div id="my-high-score">
 <h1>HIGH SCORE:</h1>
-<ol>
-  <li id="top0"></li>
-  <li id="top1"></li>
-  <li id="top2"></li>
-  <li id="top3"></li>
-  <li id="top4"></li>
-</ol>
+<table id="scoreTable">
+  <tr>
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Score</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td id="top0name"></td>
+    <td id="top0score"></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td id="top1name"></td>
+    <td id="top1score"></td>
+  </tr>
+  <tr>
+  <td>3</td>
+  <td id="top2name"></td>
+  <td id="top2score"></td>
+</tr>
+<tr>
+<td>4</td>
+<td id="top3name"></td>
+<td id="top3score"></td>
+</tr>
+<tr>
+<td>5</td>
+<td id="top4name"></td>
+<td id="top4score"></td>
+</tr>
+</table>
+
+<h2 id="yourScore">Your Score: </h2>
 </div>
 `
 
@@ -168,14 +201,23 @@ customElements.define('my-high-score',
     // lägg till namn och score i listan:
 
     for (let i = 0; i < lengthStoredScore; i++) { // varje score skrivs in i high score!
-      var topNumber = '#top' + i
-      console.log(topNumber)
-      var topElement = this.shadowRoot.querySelector(topNumber)
-      var topText = 'Name: ' + storedScore[i].username + ' Score: ' + storedScore[i].score
-      var topTextNode = document.createTextNode(topText)
-      topElement.appendChild(topTextNode)
+      // namn
+      var topName = '#top' + i + 'name'
+      var topNameElement = this.shadowRoot.querySelector(topName)
+      //var topText = 'Name: ' + storedScore[i].username + ' Score: ' + storedScore[i].score
+      var topNameTextNode = document.createTextNode(storedScore[i].username)
+      topNameElement.appendChild(topNameTextNode)
+      
+
+      // score:
+      var topScore = '#top' + i + 'score'
+      var topScoreElement = this.shadowRoot.querySelector(topScore)
+      var topScoreTextNode = document.createTextNode(storedScore[i].score)
+      topScoreElement.appendChild(topScoreTextNode)
     }
 
+    const yourScoreText = document.createTextNode(newScore)
+    this.shadowRoot.querySelector('#yourScore').appendChild(yourScoreText)
 
   }
 

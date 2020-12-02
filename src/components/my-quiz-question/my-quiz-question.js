@@ -12,7 +12,7 @@
 
 const template = document.createElement('template')
 template.innerHTML = `
-<h1>Fråga:</h1>
+<h1 id="questionTitle">Fråga:</h1>
 `
 
 const questionInput = document.createElement('template')
