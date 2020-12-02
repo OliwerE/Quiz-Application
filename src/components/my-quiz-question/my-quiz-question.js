@@ -49,7 +49,7 @@ customElements.define('my-quiz-question',
     constructor () {
       super()
       this._getCount = 0 // antal frågor som tagits emot
-      this.totQuizTime = 0 // användares totala tid
+      this.totQuizTime = 0 // användares totala tid FLYTTAD TILL MY-QUIZ
       this._firstUrl = 'http://courselab.lnu.se/question/1' // Används när spelet ska starta om! // denna får INTE ÄNDRAS!
       this._attributeUrl = 'http://courselab.lnu.se/question/1'
       this._nextUrl = 'http://courselab.lnu.se/question/1' // första frågan
@@ -90,7 +90,7 @@ customElements.define('my-quiz-question',
             return response.json()
         }).then(function (obj) {
           if (_this._getCount === 0) {
-              _this.totTimeCounter() // counts entire round
+            document.querySelector('my-quiz').totTimeCounter() // counts entire round
           }
           _this._getCount = _this._getCount + 1
             console.log(obj)
@@ -266,35 +266,23 @@ returnResponse () {
   console.log(this._statusCode)
   console.log(this._answerResponse)
   console.log('-----------------------------')
-  if (this._statusCode === 200 && this._answerResponse.nextURL === undefined) { // gör både denna och nästa if !! felet som sker när den slutar!
 
-    this.stopTotTimeCounter() // stoppar timer
-    // lägger till resultat i local storage:
-    window.localStorage.setItem('my-new-high-score', this.totQuizTime) // antal sekunder det tog att svara på frågorna
-
-
-    const responseElement = this.shadowRoot.querySelector('#response')
-    const responseText = document.createTextNode(this._answerResponse.message)
-    responseElement.appendChild(responseText)
-
-    var _this = this
-    setTimeout(function () {
-      _this.resetQuestion()
-  
-      // skapar highscore element:
-      document.querySelector('my-quiz').showHighScore()
-
-
-    }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
-
-
-
-  
-  } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
-
+  // respons meddelande (visas för användaren)
   const responseElement = this.shadowRoot.querySelector('#response')
   const responseText = document.createTextNode(this._answerResponse.message)
   responseElement.appendChild(responseText)
+
+  if (this._statusCode === 200 && this._answerResponse.nextURL === undefined) { // gör både denna och nästa if !! felet som sker när den slutar!
+    document.querySelector('my-quiz').stopTotTimeCounter()
+    // lägger till resultat i local storage:
+    window.localStorage.setItem('my-new-high-score', document.querySelector('my-quiz').totQuizTime) // antal sekunder det tog att svara på frågorna
+
+    var _this = this
+    setTimeout(function () { // för att användare ska hinna se meddelande
+      _this.resetQuestion()
+      document.querySelector('my-quiz').showHighScore()// skapar highscore element
+    }, 1500)
+  } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
 
   this._nextUrl = this._answerResponse.nextURL // sätter nästa url
 
@@ -306,17 +294,9 @@ returnResponse () {
   }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
 
 } else if (this._statusCode === 400) {
-  //alert('YOU LOST!')
-  //location.reload() // ändra till visa highscore/ restart knapp ??
-  const responseElement = this.shadowRoot.querySelector('#response')
-  const responseText = document.createTextNode(this._answerResponse.message)
-  responseElement.appendChild(responseText)
-  
-
   var _this = this
   setTimeout(function () {
     document.querySelector('my-quiz').restartmyQuiz()
-    //_this.restartmyQuiz()
   }, 1500)
 
 
@@ -339,17 +319,7 @@ resetQuestion () { // återställer frågor och tar fram nästa
 
 }
 
-totTimeCounter () {
-  var _this = this
-  this.quizLengthTimer = setInterval(()=> {
-    _this.totQuizTime = _this.totQuizTime + 1
-    console.log('sekunder: ', _this.totQuizTime)
-  }, 1000)
-}
 
-stopTotTimeCounter () {
-  clearInterval(this.quizLengthTimer)
-}
 
 firstUrlCheck() {
   if (this._firstUrl === this._attributeUrl) {

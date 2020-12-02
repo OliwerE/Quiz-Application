@@ -36,6 +36,7 @@ customElements.define('my-quiz',
 
     constructor () {
       super()
+      this.totQuizTime = 0 // användares totala tid
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
@@ -95,6 +96,18 @@ customElements.define('my-quiz',
       
       const question = document.createElement('my-quiz-question')
       document.querySelector('#container').appendChild(question)
+    }
+
+    totTimeCounter () {
+      var _this = this
+      this.quizLengthTimer = setInterval(()=> {
+        _this.totQuizTime = _this.totQuizTime + 1
+        console.log('sekunder: ', _this.totQuizTime)
+      }, 1000)
+    }
+    
+    stopTotTimeCounter () {
+      clearInterval(this.quizLengthTimer)
     }
 
     startCountDownTimer () {
