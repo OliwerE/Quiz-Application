@@ -97,6 +97,19 @@ customElements.define('my-quiz',
       document.querySelector('#container').appendChild(question)
     }
 
+    startCountDownTimer () {
+      const myTimer = document.createElement('my-countdown-timer')
+      document.querySelector('#container').appendChild(myTimer).setAttribute('limit', document.querySelector('my-quiz-question').returnObject.limit)
+    }
+
+    pauseCountDownTimer () {
+      document.querySelector('my-countdown-timer').cancelCountdown()
+    }
+
+    removeCountDownTimer () {
+      document.querySelector('my-countdown-timer').remove()
+    }
+
     myCountdownTimerRanOutOfTime () {
       const responseElement = document.querySelector('my-quiz-question').shadowRoot.querySelector('#response')
       const responseText = document.createTextNode('Time ran out!')
@@ -123,6 +136,12 @@ customElements.define('my-quiz',
     //startar igen
     this.connectedCallback()
     
+    }
+
+    showHighScore() {
+      // skapar high score element
+      const myHighScore = document.createElement('my-high-score')
+      document.querySelector('#container').appendChild(myHighScore)
     }
   }
 )

@@ -111,8 +111,7 @@ customElements.define('my-quiz-question',
     console.log('------dafsd---------')
 
     // countdown timer
-    const myTimer = document.createElement('my-countdown-timer')
-      document.querySelector('#container').appendChild(myTimer).setAttribute('limit', this.returnObject.limit)
+    document.querySelector('my-quiz').startCountDownTimer()
 
     console.log('TID LIMIT: ', this.returnObject.limit)
 
@@ -227,7 +226,8 @@ customElements.define('my-quiz-question',
     async postAnswer (userResult) {
       console.log('postAnswer starts')
       console.log('anv resultat: ', userResult) // användarens resultat
-      document.querySelector('my-countdown-timer').cancelCountdown() // stopar nedräkning!
+      
+      document.querySelector('my-quiz').pauseCountDownTimer() // pausar nedräkning!
 
       var obj = {}
 
@@ -280,10 +280,10 @@ returnResponse () {
     var _this = this
     setTimeout(function () {
       _this.resetQuestion()
-    
-      // skapar high score element
-      const myHighScore = document.createElement('my-high-score')
-      document.querySelector('#container').appendChild(myHighScore)
+  
+      // skapar highscore element:
+      document.querySelector('my-quiz').showHighScore()
+
 
     }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
 
@@ -329,7 +329,9 @@ returnResponse () {
 resetQuestion () { // återställer frågor och tar fram nästa
 
   this.shadowRoot.querySelector('#displayedQustion').remove() // tar bort elementet med frågan
-  document.querySelector('my-countdown-timer').remove() // tar bort countdown elementet
+  
+
+  document.querySelector('my-quiz').removeCountDownTimer() // tar bort countdown elementet
 
   if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
   this.getQuestion()
