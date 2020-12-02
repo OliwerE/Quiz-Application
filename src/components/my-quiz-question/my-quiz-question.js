@@ -182,9 +182,22 @@ customElements.define('my-quiz-question',
 
       if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
       const answerBtn = this.shadowRoot.querySelector('#answerBtn')
+      const inputElement = this.shadowRoot.querySelector('#questionInput')
+
+      // trycka på knappen
       answerBtn.addEventListener('click', () => {
        var answer = this.shadowRoot.querySelector('#questionInput').value
        this.postAnswer(answer)
+      })
+
+      
+
+      // enter knapp
+      inputElement.addEventListener('keypress', (e)=> {
+        if (e.key === 'Enter') {
+          var answer = this.shadowRoot.querySelector('#questionInput').value
+          this.postAnswer(answer)
+        }
       })
       } else {
         console.log('OM DET ÄR RADIOKNAPPAR!')

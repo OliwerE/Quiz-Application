@@ -54,6 +54,20 @@ customElements.define('my-nickname',
             window.localStorage.setItem('my-nickname', inputValue)
             this.removeQuizSetup()
           })
+
+          // Event lyssnare enter
+          const enterBtn = this.shadowRoot.querySelector('#myInput')
+
+          enterBtn.addEventListener('keypress', (e)=> {
+            if (e.key === 'Enter') {
+              const inputValue = this.shadowRoot.querySelector('#myInput').value
+              console.log(inputValue)
+              window.localStorage.setItem('my-nickname', inputValue)
+              this.removeQuizSetup()
+            }
+          })
+
+
     }
 
     attributeChangedCallback (name, oldValue, newValue) {

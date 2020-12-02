@@ -78,6 +78,14 @@ customElements.define('my-quiz',
           console.log('jag såg knappen trycktes i my-quiz')
           _this.nextQuestion()
         })
+
+        const enterBtn = extShadowRoot.querySelector('#myInput')
+
+        enterBtn.addEventListener('keypress', (e)=> {
+          if (e.key === 'Enter') {
+            _this.nextQuestion()
+          }
+        })
       }, 1)
 
     }
