@@ -140,7 +140,7 @@ customElements.define('my-quiz',
     restartmyQuiz () {
 
     // stoppar total tid räknaren
-    document.querySelector('my-quiz-question').stopTotTimeCounter()
+    this.stopTotTimeCounter()
 
     // tar bort element
     document.querySelector('my-quiz-question').remove()
