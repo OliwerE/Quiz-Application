@@ -121,61 +121,55 @@ customElements.define('my-quiz-question',
     const obj = this.returnObject
     const currentQuestion = obj.question
 
-
     if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
     // skapar question template
     this.shadowRoot.appendChild(questionInput.content.cloneNode(true))
 
-    // lägger in frågan i question template headern
-    const questionHeader = this.shadowRoot.querySelector('#question')
-    const questionHeaderText = document.createTextNode(currentQuestion)
-    questionHeader.appendChild(questionHeaderText)
-
     } else if (this.returnObject.alternatives !== undefined) { // om frågan är av typen radio btn
           // skapar question template
-    this.shadowRoot.appendChild(questionRadio.content.cloneNode(true))
-    // lägger in frågan i question template headern
-    const radioQuestionHeader = this.shadowRoot.querySelector('#question')
-    const radioQuestionHeaderText = document.createTextNode(currentQuestion)
-    radioQuestionHeader.appendChild(radioQuestionHeaderText)
+      this.shadowRoot.appendChild(questionRadio.content.cloneNode(true))
 
-    // skapa antal radioknappar här!
-    let numOfAlt = Object.keys(obj.alternatives).length
-    console.log('ANTAL ALTERNATIV!123', numOfAlt)
+      // skapa antal radioknappar här!
+      let numOfAlt = Object.keys(obj.alternatives).length
+      console.log('ANTAL ALTERNATIV!123', numOfAlt)
 
-    for (let i = 0; i < numOfAlt; i++) { // skapar lika många radioknappar som alternativ!
+      for (let i = 0; i < numOfAlt; i++) { // skapar lika många radioknappar som alternativ!
 
-      const button = document.createElement('input')
+        const button = document.createElement('input')
 
-      let currentValue = i + 1
-      let currentButton = `alt${currentValue}`
+        let currentValue = i + 1
+        let currentButton = `alt${currentValue}`
 
-      // lägger till i formulär och skapar id
-      this.shadowRoot.querySelector('#altFormBtns').appendChild(button).setAttribute('id', currentButton)
+        // lägger till i formulär och skapar id
+        this.shadowRoot.querySelector('#altFormBtns').appendChild(button).setAttribute('id', currentButton)
 
-      // sätter attribut
-      this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('type', 'radio')
-      this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('name', 'alt')
-      this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('value', `alt${currentValue}`)
+        // sätter attribut
+        this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('type', 'radio')
+        this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('name', 'alt')
+        this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('value', `alt${currentValue}`)
 
 
 
-      // skapa label för knapp
+        // skapa label för knapp
 
-      let label = document.createElement('label')
-      let labelQuestion = `alt` + (i + 1)
-      let labelTextNode = document.createTextNode(obj.alternatives[labelQuestion])
-      label.appendChild(labelTextNode)
-      this.shadowRoot.querySelector('#altFormBtns').appendChild(label)
+        let label = document.createElement('label')
+        let labelQuestion = `alt` + (i + 1)
+        let labelTextNode = document.createTextNode(obj.alternatives[labelQuestion])
+        label.appendChild(labelTextNode)
+        this.shadowRoot.querySelector('#altFormBtns').appendChild(label)
 
-      // byter rad:
-      let changeRow = document.createElement('br')
-      this.shadowRoot.querySelector('#altFormBtns').appendChild(changeRow)
-    }
+        // byter rad:
+        let changeRow = document.createElement('br')
+        this.shadowRoot.querySelector('#altFormBtns').appendChild(changeRow)
+      }
   }
 
-
-    this.questionAnswer()
+  // skriver ut frågan
+  const questionHeader = this.shadowRoot.querySelector('#question')
+  const questionHeaderText = document.createTextNode(currentQuestion)
+  questionHeader.appendChild(questionHeaderText)
+  
+  this.questionAnswer()
     }
 
     questionAnswer () {
