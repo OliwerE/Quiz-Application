@@ -10,7 +10,13 @@ The table is styleable using the id `scoreTable`.
 
 ## Attributes
 
-Lägg till!!
+### `nicknameKey`
+
+Key used to find the nickname in local storage.
+
+### `newHighScorekey`
+
+Key used to find the new high score in local storage.
 
 How to use:
 

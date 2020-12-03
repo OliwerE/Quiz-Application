@@ -80,6 +80,8 @@ customElements.define('my-high-score',
    */
     constructor () {
       super()
+      this._nickname = 'my-nickname'
+      this._newHighScore = 'my-new-high-score'
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
@@ -87,9 +89,11 @@ customElements.define('my-high-score',
 
     /**
      * Attributes observed if changed.
+     *
+     * @returns {string} - the observed attribute found.
      */
     static get observedAttributes () {
-      // om används glöm ej README!
+      return ['nicknameKey', 'newHighScorekey']
     }
 
     /**
@@ -108,7 +112,11 @@ customElements.define('my-high-score',
      * @param {string} newValue - the new attribute value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-
+      if (name === 'nicknameKey') { // If the nickname key in local storage is changed
+        this._nickname = newValue
+      } else if (name === 'newHighScorekey') { // if the new high score key in local storage is changed.
+        this._newHighScore = newValue
+      }
     }
 
     /**
@@ -122,8 +130,8 @@ customElements.define('my-high-score',
      * A method comparing and displaying the result in the template.
      */
     compareResult () {
-      const nickname = window.localStorage.getItem('my-nickname') // får namnet, fixa attribut för att ändra vilken key namnet finns i (om annan komponent skulle användas!)
-      const newScore = window.localStorage.getItem('my-new-high-score') // nya higshcore ändra även denna med attribut!
+      const nickname = window.localStorage.getItem(this._nickname) // får namnet, fixa attribut för att ändra vilken key namnet finns i (om annan komponent skulle användas!)
+      const newScore = window.localStorage.getItem(this._newHighScore) // nya higshcore ändra även denna med attribut!
       const currentHighScoreList = window.localStorage.getItem('my-high-score')
 
       if (currentHighScoreList === null) { // om local storage inte har high score lista
