@@ -18,3 +18,21 @@ body h1 {
 	0 20px 20px #0000001f;
 }
 
+/* Restart btn */
+
+#restartBtn {
+	display: block;
+	margin: 0 auto;
+	width: 200px;
+	height: 50px;
+	font-size: 2rem;
+	font-weight: bold;
+	background-color: rgb(97, 97, 97);
+	color: white;
+	border: 1px solid black;
+	border-radius: 5px;
+  }
+  #restartBtn:hover {
+	background-color: green;
+  }
+

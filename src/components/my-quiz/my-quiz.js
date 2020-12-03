@@ -19,6 +19,11 @@ h1 {
 <h1>Quiz</h1>
 `
 
+const restartBtn = document.createElement('template')
+restartBtn.innerHTML = `
+<button type="button" id="restartBtn">Restart quiz</button>
+`
+
 /**
  * An element controlling the quiz.
  */
@@ -92,7 +97,7 @@ customElements.define('my-quiz',
         nickSubmitBtn.addEventListener('click', () => {
           console.log('jag såg knappen trycktes i my-quiz')
           _this.firstQuestion()
-        })
+        }, { once: true })
 
         const enterBtn = extShadowRoot.querySelector('#myInput')
 
@@ -189,10 +194,38 @@ customElements.define('my-quiz',
      */
     showHighScore () {
       // ta bort text
-      document.querySelector('my-quiz-question').shadowRoot.querySelector('#questionTitle').remove()
+      // document.querySelector('my-quiz-question').shadowRoot.querySelector('#questionTitle').remove()
+      document.querySelector('my-quiz-question').remove()
+
       // skapar high score element
       const myHighScore = document.createElement('my-high-score')
       document.querySelector('#container').appendChild(myHighScore)
+
+      // creates restart button
+      document.querySelector('#container').appendChild(restartBtn.content.cloneNode(true))
+
+      // const _this = this
+      setTimeout(() => { // DÅLIG LÖSNING!
+        const restartBtn = document.querySelector('#restartBtn')
+        restartBtn.addEventListener('click', () => {
+          this.restartFromHighScore()
+        }, { once: true })
+      }, 0)
+    }
+
+    /**
+     * A method restarting the quiz when the player click restart quiz.
+     */
+    restartFromHighScore () {
+      // tar bort high score och knapp
+      document.querySelector('my-high-score').remove()
+      document.querySelector('#restartBtn').remove()
+
+      // återställer total tid
+      this.totQuizTime = 0
+
+      // startar från början
+      this.connectedCallback()
     }
   }
 )

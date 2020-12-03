@@ -59,7 +59,6 @@ customElements.define('my-quiz-question',
     constructor () {
       super()
       this._getCount = 0 // antal frågor som tagits emot
-      this.totQuizTime = 0 // användares totala tid FLYTTAD TILL MY-QUIZ
       this._firstUrl = 'http://courselab.lnu.se/question/1' // Används när spelet ska starta om! // denna får INTE ÄNDRAS!
       this._attributeUrl = 'http://courselab.lnu.se/question/1'
       this._nextUrl = 'http://courselab.lnu.se/question/1' // första frågan
@@ -199,18 +198,31 @@ customElements.define('my-quiz-question',
       if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
         const answerBtn = this.shadowRoot.querySelector('#answerBtn')
         const inputElement = this.shadowRoot.querySelector('#questionInput')
+
         // trycka på knappen
         answerBtn.addEventListener('click', () => {
           const answer = this.shadowRoot.querySelector('#questionInput').value
           this.postAnswer(answer)
-        })
-        // enter knapp
-        inputElement.addEventListener('keypress', (e) => {
+        }, { once: true })
+
+        // used in enter key event
+        const _this = this
+
+        /**
+         * A function used by the input fields enter key event.
+         *
+         * @param {object} e - An event ombject.
+         */
+        this.handleEnter = (e) => {
           if (e.key === 'Enter') {
-            const answer = this.shadowRoot.querySelector('#questionInput').value
-            this.postAnswer(answer)
+            const answer = _this.shadowRoot.querySelector('#questionInput').value
+            _this.removeEnterListener()
+            _this.postAnswer(answer)
           }
-        })
+        }
+
+        // enter knapp
+        inputElement.addEventListener('keypress', this.handleEnter)
       } else { // om frågan har alternativ
         const radiocontBtn = this.shadowRoot.querySelector('#continueBtn')
         radiocontBtn.addEventListener('click', () => {
@@ -223,8 +235,16 @@ customElements.define('my-quiz-question',
             }
           }
           this.postAnswer(answer)
-        })
+        }, { once: true })
       }
+    }
+
+    /**
+     * Removes enter key event listener from question input.
+     */
+    removeEnterListener () {
+      const _this = this
+      this.shadowRoot.querySelector('#questionInput').removeEventListener('keypress', _this.handleEnter)
     }
 
     /**
