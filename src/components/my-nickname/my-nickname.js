@@ -38,16 +38,19 @@ customElements.define('my-nickname',
      */
     constructor () {
       super()
+      this.returnElement = 'my-quiz'
 
       this.attachShadow({ mode: 'open' })
         .appendChild(form.content.cloneNode(true))
     }
 
     /**
-     * Attributes observed if changed.
+     * A method observing an element attribute.
+     *
+     * @returns {string} - the observed attribute found.
      */
     static get observedAttributes () {
-
+      return ['returnElement']
     }
 
     /**
@@ -85,14 +88,16 @@ customElements.define('my-nickname',
      * @param {string} newValue - the new attribute value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-
+      if (name === 'returnElement' && typeof name === 'string') { // Changes return element
+        this.returnElement = newValue
+      }
     }
 
     /**
-     * Called when element is removed from dom.
+     * Called when element is removed from dom. Returns to another element.
      */
     disconnectedCallback () {
-
+      document.querySelector(this.returnElement).myNicknameFinished()
     }
 
     /**

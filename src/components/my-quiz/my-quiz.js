@@ -60,7 +60,7 @@ customElements.define('my-quiz',
       const clickLog = document.createElement('my-nickname')
       document.querySelector('#container').appendChild(clickLog)
 
-      this.awaitNickname()
+      // this.awaitNickname()
     }
 
     /**
@@ -82,31 +82,10 @@ customElements.define('my-quiz',
     }
 
     /**
-     * A method with an event listener waiting for player to submit a nickname. Then runs firstQuestion method.
+     * Method called by my-nickname when finished.
      */
-    awaitNickname () {
-      console.log('väntar på nickname i my-quiz')
-
-      const _this = this // event lyssnaren refererar fel annars!
-
-      setTimeout(function () { // DÅLIG LÖSNING! ELEMENTET HINNER INTE SKAPAS INNAN MY-NICKNAME KOMPONENT SKAPAR ELEMENTET! async await istället??
-        const extShadowRoot = document.querySelector('my-nickname').shadowRoot
-        const nickSubmitBtn = extShadowRoot.querySelector('#setupBtn')
-        console.log('waiting in my-quiz')
-
-        nickSubmitBtn.addEventListener('click', () => {
-          console.log('jag såg knappen trycktes i my-quiz')
-          _this.firstQuestion()
-        }, { once: true })
-
-        const enterBtn = extShadowRoot.querySelector('#myInput')
-
-        enterBtn.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            _this.firstQuestion()
-          }
-        })
-      }, 1)
+    myNicknameFinished () {
+      this.firstQuestion()
     }
 
     /**
