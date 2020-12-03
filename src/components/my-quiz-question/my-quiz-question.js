@@ -255,8 +255,14 @@ customElements.define('my-quiz-question',
      */
     async postAnswer (userResult) {
       document.querySelector('my-quiz').pauseCountDownTimer() // pausar nedräkning!
-      const obj = {} // Svar objekt
+      const obj = {
+        answer: ''
+      } // Svar objekt
+      alert(userResult)
+
+      if (userResult !== undefined) {
       obj.answer = userResult // lägger till svaret
+      }
 
       const _this = this
       await window.fetch(this._nextUrl, { // skickar användarens svar
