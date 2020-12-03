@@ -258,10 +258,9 @@ customElements.define('my-quiz-question',
       const obj = {
         answer: ''
       } // Svar objekt
-      alert(userResult)
 
       if (userResult !== undefined) {
-      obj.answer = userResult // lägger till svaret
+        obj.answer = userResult // lägger till svaret
       }
 
       const _this = this
