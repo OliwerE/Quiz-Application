@@ -1,12 +1,12 @@
 /**
- * module....
+ * Module displaying a high score table.
  *
- * @author // TODO: YOUR NAME <YOUR EMAIL>
+ * @author Oliwer Ellréus <oe222ez@student.lnu.se>
  * @version 1.0.0
  */
 
 /**
- * Define template.
+ * A template containing the layout for the high score element.
  */
 
 const template = document.createElement('template')
@@ -67,159 +67,173 @@ h1, h2 {
 </div>
 `
 
-
 /**
- * Define custom element.
+ * A custom element displaying a high score based on local storage data.
  */
 customElements.define('my-high-score',
+  /**
+   * A class representing the high score elements object.
+   */
   class extends HTMLElement {
+  /**
+   * Constructs the element.
+   */
+    constructor () {
+      super()
 
-  constructor () {
-    super()
+      this.attachShadow({ mode: 'open' })
+        .appendChild(template.content.cloneNode(true))
+    }
 
-    this.attachShadow({ mode: 'open' })
-      .appendChild(template.content.cloneNode(true))
+    /**
+     * Attributes observed if changed.
+     */
+    static get observedAttributes () {
 
-  }
+    }
 
-  static get observedAttributes () {
+    /**
+     * Called when element is loaded. Runs compareResult method.
+     */
+    connectedCallback () {
+      console.log('-----MY HIGH SCORE STARTAR!!------')
+      this.compareResult()
+    }
 
-  }
+    /**
+     * Called when an attribute has changed.
+     *
+     * @param {string} name - name of the attribute.
+     * @param {string} oldValue - the old attribute value.
+     * @param {string} newValue - the new attribute value.
+     */
+    attributeChangedCallback (name, oldValue, newValue) {
 
-  connectedCallback () {
-    console.log('-----MY HIGH SCORE STARTAR!!------')
-    this.compareResult()
-  }
+    }
 
-  attributeChangedCallback (name, oldValue, newValue) {
+    /**
+     * Called when element is removed from dom.
+     */
+    disconnectedCallback () {
 
-  }
+    }
 
-  disconnectedCallback () {
+    /**
+     * A method comparing and displaying the result in the template.
+     */
+    compareResult () {
+      const nickname = window.localStorage.getItem('my-nickname') // får namnet, fixa attribut för att ändra vilken key namnet finns i (om annan komponent skulle användas!)
+      const newScore = window.localStorage.getItem('my-new-high-score') // nya higshcore ändra även denna med attribut!
+      const currentHighScoreList = window.localStorage.getItem('my-high-score')
 
-  }
-
-  compareResult () {
-    var nickname = window.localStorage.getItem('my-nickname') // får namnet, fixa attribut för att ändra vilken key namnet finns i (om annan komponent skulle användas!)
-    var newScore = window.localStorage.getItem('my-new-high-score') // nya higshcore ändra även denna med attribut!
-    var currentHighScoreList = window.localStorage.getItem('my-high-score')
-
-    if (currentHighScoreList === null) { // om local storage inte har high score lista
-      
+      if (currentHighScoreList === null) { // om local storage inte har high score lista
       // skapar resultatets array
-      var newScoreArray = []
-      
-      console.log(newScoreArray)
+        let newScoreArray = []
 
-      //json object
-      var playerScoreObject = {}
+        console.log(newScoreArray)
 
-      playerScoreObject.username = nickname
-      playerScoreObject.score = newScore
+        // json object
+        let playerScoreObject = {}
 
-      console.log('----JSON-----')
-      console.log(playerScoreObject)
-      console.log('----JSON-----')
+        playerScoreObject.username = nickname
+        playerScoreObject.score = newScore
 
-      newScoreArray.push(playerScoreObject)
-      console.log(newScoreArray)
+        console.log('----JSON-----')
+        console.log(playerScoreObject)
+        console.log('----JSON-----')
 
-      console.log('gör om array till string-----------')
-      var stringArray = JSON.stringify(newScoreArray)
-      console.log(stringArray)
+        newScoreArray.push(playerScoreObject)
+        console.log(newScoreArray)
 
-      // skapar array string i local storage:
-      window.localStorage.setItem('my-high-score', stringArray)
+        console.log('gör om array till string-----------')
+        const stringArray = JSON.stringify(newScoreArray)
+        console.log(stringArray)
 
-       // tar bort:
-      playerScoreObject = {}
-      var newScoreArray = []
-    } else {
-      console.log('är i else!')
-      var currentHighScore = window.localStorage.getItem('my-high-score')
-      var parseCurrentHighScore = JSON.parse(currentHighScore)
-      var newPlayerScore = {}
+        // skapar array string i local storage:
+        window.localStorage.setItem('my-high-score', stringArray)
 
-      newPlayerScore.username = nickname
-      newPlayerScore.score = newScore
+        // tar bort:
+        playerScoreObject = {}
+        newScoreArray = []
+      } else {
+        console.log('är i else!')
+        const currentHighScore = window.localStorage.getItem('my-high-score')
+        const parseCurrentHighScore = JSON.parse(currentHighScore)
+        let newPlayerScore = {}
 
-      parseCurrentHighScore.push(newPlayerScore)
+        newPlayerScore.username = nickname
+        newPlayerScore.score = newScore
 
-      var scoreString = JSON.stringify(parseCurrentHighScore)
+        parseCurrentHighScore.push(newPlayerScore)
 
-      console.log(newPlayerScore)
-      console.log(parseCurrentHighScore)
-      console.log('striiing')
-      console.log(scoreString)
-      
-      window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
-      newPlayerScore = {}
+        const scoreString = JSON.stringify(parseCurrentHighScore)
 
+        console.log(newPlayerScore)
+        console.log(parseCurrentHighScore)
+        console.log('striiing')
+        console.log(scoreString)
 
-    }
+        window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
+        newPlayerScore = {}
+      }
 
-    var storedData = window.localStorage.getItem('my-high-score')
+      const storedData = window.localStorage.getItem('my-high-score')
 
-    var storedScore = JSON.parse(storedData)
-    var lengthStoredScore = Object.keys(storedScore).length
+      let storedScore = JSON.parse(storedData)
+      let lengthStoredScore = Object.keys(storedScore).length
 
-
-    console.log('the array----------------')
-    console.log(storedScore)
-    console.log(lengthStoredScore)
-
-    //hantera ordning: 
-    if (lengthStoredScore <= 5) {
-      console.log('5 eller mindre scores! endast sortera!')
-
-      console.log(storedScore[0].score)
-      //console.log(storedScore[1].score)
-    }
-
-    // sorterar ordningen i array baserat på spelarnas score
-    var sorting = storedScore.sort(function (a, b) {
-      return a.score - b.score
-    })
-
-    console.log(sorting)
-
-    // om mer än 5 scores
-    if (lengthStoredScore > 5) {
-      console.log('-------mer än 5 startar-------')
-      console.log('DEBUG det är mer än 5 scores! klipper ut 5 första (alla redan sorterade)')
-      storedScore = storedScore.splice(0, 5) // om det finns mer än 5 scores ersätts storedScore med endast 5 första score objekten! (efter att de sorterats i rätt ordning!)
-      lengthStoredScore = 5 // tar bort bugg
+      console.log('the array----------------')
       console.log(storedScore)
-      console.log('-------mer än 5 slutar-------')
-      // skriver över local storage med endast 5 scores:
-      var stringifyFiveScores = JSON.stringify(storedScore)
+      console.log(lengthStoredScore)
 
-      window.localStorage.setItem('my-high-score', stringifyFiveScores)
-    }
+      // hantera ordning:
+      if (lengthStoredScore <= 5) {
+        console.log('5 eller mindre scores! endast sortera!')
 
+        console.log(storedScore[0].score)
+      // console.log(storedScore[1].score)
+      }
 
-    // lägg till namn och score i listan:
+      // sorterar ordningen i array baserat på spelarnas score
+      const sorting = storedScore.sort(function (a, b) {
+        return a.score - b.score
+      })
 
-    for (let i = 0; i < lengthStoredScore; i++) { // varje score skrivs in i high score!
+      console.log(sorting)
+
+      // om mer än 5 scores
+      if (lengthStoredScore > 5) {
+        console.log('-------mer än 5 startar-------')
+        console.log('DEBUG det är mer än 5 scores! klipper ut 5 första (alla redan sorterade)')
+        storedScore = storedScore.splice(0, 5) // om det finns mer än 5 scores ersätts storedScore med endast 5 första score objekten! (efter att de sorterats i rätt ordning!)
+        lengthStoredScore = 5 // tar bort bugg
+        console.log(storedScore)
+        console.log('-------mer än 5 slutar-------')
+        // skriver över local storage med endast 5 scores:
+        const stringifyFiveScores = JSON.stringify(storedScore)
+
+        window.localStorage.setItem('my-high-score', stringifyFiveScores)
+      }
+
+      // lägg till namn och score i listan:
+
+      for (let i = 0; i < lengthStoredScore; i++) { // varje score skrivs in i high score!
       // namn
-      var topName = '#top' + i + 'name'
-      var topNameElement = this.shadowRoot.querySelector(topName)
-      //var topText = 'Name: ' + storedScore[i].username + ' Score: ' + storedScore[i].score
-      var topNameTextNode = document.createTextNode(storedScore[i].username)
-      topNameElement.appendChild(topNameTextNode)
-      
+        const topName = '#top' + i + 'name'
+        const topNameElement = this.shadowRoot.querySelector(topName)
+        // var topText = 'Name: ' + storedScore[i].username + ' Score: ' + storedScore[i].score
+        const topNameTextNode = document.createTextNode(storedScore[i].username)
+        topNameElement.appendChild(topNameTextNode)
 
-      // score:
-      var topScore = '#top' + i + 'score'
-      var topScoreElement = this.shadowRoot.querySelector(topScore)
-      var topScoreTextNode = document.createTextNode(storedScore[i].score)
-      topScoreElement.appendChild(topScoreTextNode)
+        // score:
+        const topScore = '#top' + i + 'score'
+        const topScoreElement = this.shadowRoot.querySelector(topScore)
+        const topScoreTextNode = document.createTextNode(storedScore[i].score)
+        topScoreElement.appendChild(topScoreTextNode)
+      }
+
+      const yourScoreText = document.createTextNode(newScore)
+      this.shadowRoot.querySelector('#yourScore').appendChild(yourScoreText)
     }
-
-    const yourScoreText = document.createTextNode(newScore)
-    this.shadowRoot.querySelector('#yourScore').appendChild(yourScoreText)
-
-  }
-
   }
 )

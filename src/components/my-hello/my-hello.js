@@ -36,6 +36,9 @@ template.innerHTML = `
  * Define custom element.
  */
 customElements.define('my-hello',
+  /**
+   *
+   */
   class extends HTMLElement {
     /**
      * Creates an instance of the current type.
