@@ -54,8 +54,6 @@ customElements.define('my-quiz',
      * Called when the element is loaded. creates nickname element inside an element. Then runs awaitNickname method.
      */
     connectedCallback () {
-      console.log('connected called!')
-
       // skapar nickname med my-nickname komponent!
       const clickLog = document.createElement('my-nickname')
       document.querySelector('#container').appendChild(clickLog)
@@ -92,8 +90,6 @@ customElements.define('my-quiz',
      * A method creating a my-quiz-question element.
      */
     firstQuestion () {
-      console.log('är i nextQuestion!')
-
       const question = document.createElement('my-quiz-question')
       document.querySelector('#container').appendChild(question)
     }
@@ -105,7 +101,6 @@ customElements.define('my-quiz',
       const _this = this
       this.quizLengthTimer = setInterval(() => {
         _this.totQuizTime = _this.totQuizTime + 1
-        console.log('sekunder: ', _this.totQuizTime)
       }, 1000)
     }
 
@@ -147,7 +142,6 @@ customElements.define('my-quiz',
       responseElement.appendChild(responseText)
 
       setTimeout(function () {
-        console.log('är här!!876')
         document.querySelector('my-quiz').restartmyQuiz()
         // _this.restartmyQuiz()
       }, 1500)
@@ -186,10 +180,25 @@ customElements.define('my-quiz',
       // const _this = this
       setTimeout(() => { // DÅLIG LÖSNING!
         const restartBtn = document.querySelector('#restartBtn')
-        restartBtn.addEventListener('click', () => {
+
+        /**
+         * A function used by restart quiz event.
+         */
+        this._eventRestartQuiz = () => {
+          this.removeEventRestartQuizListener()
           this.restartFromHighScore()
-        }, { once: true })
+        }
+
+        restartBtn.addEventListener('click', this._eventRestartQuiz)
       }, 0)
+    }
+
+    /**
+     * Removes event listener.
+     */
+    removeEventRestartQuizListener () {
+      const _this = this
+      document.querySelector('#restartBtn').removeEventListener('click', _this._eventRestartQuiz)
     }
 
     /**

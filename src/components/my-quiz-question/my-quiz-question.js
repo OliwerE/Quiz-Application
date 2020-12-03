@@ -78,7 +78,6 @@ customElements.define('my-quiz-question',
      * Called when the element is loaded. Runs getQuestion method.
      */
     connectedCallback () {
-      console.log('är i my quiz question')
       // this.firstUrlCheck() // ändra till attribute callback!
       this.getQuestion()
     }
@@ -108,23 +107,15 @@ customElements.define('my-quiz-question',
     async getQuestion () {
       const _this = this
       await window.fetch(this._nextUrl).then(function (response) {
-        // console.log(response.json())
         _this._statusCode = response.status // lagrar statuskoden // lagrar statuskoden
-
-        console.log('-----------GET-Status-Code---------')
-        console.log(_this._statusCode)
-        console.log('-----------------------------------')
-
         return response.json()
       }).then(function (obj) {
         if (_this._getCount === 0) {
           document.querySelector('my-quiz').totTimeCounter() // counts entire round
         }
         _this._getCount = _this._getCount + 1
-        console.log(obj)
         _this.returnObject = obj
         _this._nextUrl = obj.nextURL
-
         _this.showQuestion()
       }).catch(function (err) { // fångar eventuella fel
         console.error('fel har inträffat')
@@ -149,7 +140,6 @@ customElements.define('my-quiz-question',
 
         // skapa antal radioknappar här!
         const numOfAlt = Object.keys(obj.alternatives).length
-        console.log('ANTAL ALTERNATIV!123', numOfAlt)
 
         for (let i = 0; i < numOfAlt; i++) { // skapar lika många radioknappar som alternativ!
           const button = document.createElement('input')
@@ -199,11 +189,17 @@ customElements.define('my-quiz-question',
         const answerBtn = this.shadowRoot.querySelector('#answerBtn')
         const inputElement = this.shadowRoot.querySelector('#questionInput')
 
-        // trycka på knappen
-        answerBtn.addEventListener('click', () => {
+        /**
+         * A function used by button click event.
+         */
+        this._clickBtnEvent = () => {
           const answer = this.shadowRoot.querySelector('#questionInput').value
+          _this.removeEnterListener('input')
           this.postAnswer(answer)
-        }, { once: true })
+        }
+
+        // trycka på knappen
+        answerBtn.addEventListener('click', this._clickBtnEvent)
 
         // used in enter key event
         const _this = this
@@ -213,19 +209,23 @@ customElements.define('my-quiz-question',
          *
          * @param {object} e - An event ombject.
          */
-        this.handleEnter = (e) => {
+        this._eventClickEnter = (e) => {
           if (e.key === 'Enter') {
             const answer = _this.shadowRoot.querySelector('#questionInput').value
-            _this.removeEnterListener()
+            _this.removeEnterListener('input')
             _this.postAnswer(answer)
           }
         }
 
         // enter knapp
-        inputElement.addEventListener('keypress', this.handleEnter)
+        inputElement.addEventListener('keypress', this._eventClickEnter)
       } else { // om frågan har alternativ
         const radiocontBtn = this.shadowRoot.querySelector('#continueBtn')
-        radiocontBtn.addEventListener('click', () => {
+
+        /**
+         * A function used by continuebutton (questions with alternatives).
+         */
+        this._radioBtnClick = () => {
           const allRadioBtns = this.shadowRoot.querySelectorAll('input[name="alt"]') // alla radioknappar
           let answer
           for (const radiobutton of allRadioBtns) { // går igenom och kontrollerar om en radioknapp är markerad. om någon är läggs värdet i value
@@ -234,17 +234,27 @@ customElements.define('my-quiz-question',
               break
             }
           }
+          this.removeEnterListener('radio')
           this.postAnswer(answer)
-        }, { once: true })
+        }
+
+        radiocontBtn.addEventListener('click', this._radioBtnClick)
       }
     }
 
     /**
-     * Removes enter key event listener from question input.
+     * Removes event listeners.
+     *
+     * @param {string} type - a string used to decide if the question had radio buttons or an input field.
      */
-    removeEnterListener () {
+    removeEnterListener (type) {
       const _this = this
-      this.shadowRoot.querySelector('#questionInput').removeEventListener('keypress', _this.handleEnter)
+      if (type === 'input') {
+        this.shadowRoot.querySelector('#questionInput').removeEventListener('keypress', _this._eventClickEnter)
+        this.shadowRoot.querySelector('#answerBtn').removeEventListener('click', _this._clickBtnEvent)
+      } else if (type === 'radio') {
+        this.shadowRoot.querySelector('#continueBtn').removeEventListener('click', _this._radioBtnClick)
+      }
     }
 
     /**
@@ -294,7 +304,6 @@ customElements.define('my-quiz-question',
       responseElement.appendChild(responseText)
 
       if (this._statusCode === 200 && this._answerResponse.nextURL === undefined) {
-        console.log('SISTA FRÅGAN')
         document.querySelector('my-quiz').stopTotTimeCounter()
         // lägger till resultat i local storage:
         window.localStorage.setItem('my-new-high-score', document.querySelector('my-quiz').totQuizTime) // antal sekunder det tog att svara på frågorna

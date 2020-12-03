@@ -57,27 +57,38 @@ customElements.define('my-nickname',
      * Called when the element is loaded. Adds event listeners for button (click and enter).
      */
     connectedCallback () {
-      console.log('nick called!')
       const setupBtn = this.shadowRoot.querySelector('#setupBtn')
 
-      setupBtn.addEventListener('click', () => { // ta bort denna event lyssnare när den är färdig!
+      /**
+       * A function used when user click the continue button.
+       */
+      this.eventSetupBtn = () => { // ta bort denna event lyssnare när den är färdig!
         const inputValue = this.shadowRoot.querySelector('#myInput').value
-        console.log(inputValue)
         window.localStorage.setItem('my-nickname', inputValue)
+        this.removeNicknameEventListeners()
         this.removeQuizSetup()
-      })
+      }
+
+      setupBtn.addEventListener('click', this.eventSetupBtn)
 
       // Event lyssnare enter
       const enterBtn = this.shadowRoot.querySelector('#myInput')
 
-      enterBtn.addEventListener('keypress', (e) => {
+      /**
+       * A function used by enter click event.
+       *
+       * @param {object} e - The event data.
+       */
+      this.eventEnterBtn = (e) => {
         if (e.key === 'Enter') {
           const inputValue = this.shadowRoot.querySelector('#myInput').value
-          console.log(inputValue)
           window.localStorage.setItem('my-nickname', inputValue)
+          this.removeNicknameEventListeners()
           this.removeQuizSetup()
         }
-      })
+      }
+
+      enterBtn.addEventListener('keypress', this.eventEnterBtn)
     }
 
     /**
@@ -101,11 +112,18 @@ customElements.define('my-nickname',
     }
 
     /**
+     * A function that removes event listeners.
+     */
+    removeNicknameEventListeners () {
+      const _this = this
+      this.shadowRoot.querySelector('#setupBtn').removeEventListener('click', _this.eventSetupBtn)
+      this.shadowRoot.querySelector('#myInput').removeEventListener('keypress', _this.eventEnterBtn)
+    }
+
+    /**
      * Removes my-nickname element from dom.
      */
     removeQuizSetup () {
-      console.log('startar ta bort template!')
-
       document.querySelector('my-nickname').remove()
     }
   }

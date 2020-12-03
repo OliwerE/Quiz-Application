@@ -68,7 +68,6 @@ customElements.define('my-countdown-timer',
       if (name === 'limit') {
         const newLimit = Number(newValue)
         if (Number.isInteger(newLimit) === true) { // om newValue är av typen number (förutom NaN)
-          console.log('limit fick ett nytt värde123: ', newLimit)
           this.time = newLimit
         }
       } else if (name === 'timeRanOut') { // ev kontrollera att attributet är ett id??
@@ -98,7 +97,6 @@ customElements.define('my-countdown-timer',
 
         if (_this.time <= 0) {
           clearInterval(_this.timer)
-          console.log('tiden tog slut!!')
           document.querySelector(_this._ranOutOfTime).myCountdownTimerRanOutOfTime() // ta bort hårdkodning för annan komponent! (lägg till med attribut??)
         }
       }, 1000)

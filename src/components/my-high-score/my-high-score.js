@@ -100,7 +100,6 @@ customElements.define('my-high-score',
      * Called when element is loaded. Runs compareResult method.
      */
     connectedCallback () {
-      console.log('-----MY HIGH SCORE STARTAR!!------')
       this.compareResult()
     }
 
@@ -137,25 +136,14 @@ customElements.define('my-high-score',
       if (currentHighScoreList === null) { // om local storage inte har high score lista
       // skapar resultatets array
         let newScoreArray = []
-
-        console.log(newScoreArray)
-
         // json object
         let playerScoreObject = {}
 
         playerScoreObject.username = nickname
         playerScoreObject.score = newScore
 
-        console.log('----JSON-----')
-        console.log(playerScoreObject)
-        console.log('----JSON-----')
-
         newScoreArray.push(playerScoreObject)
-        console.log(newScoreArray)
-
-        console.log('gör om array till string-----------')
         const stringArray = JSON.stringify(newScoreArray)
-        console.log(stringArray)
 
         // skapar array string i local storage:
         window.localStorage.setItem('my-high-score', stringArray)
@@ -164,7 +152,6 @@ customElements.define('my-high-score',
         playerScoreObject = {}
         newScoreArray = []
       } else {
-        console.log('är i else!')
         const currentHighScore = window.localStorage.getItem('my-high-score')
         const parseCurrentHighScore = JSON.parse(currentHighScore)
         let newPlayerScore = {}
@@ -173,13 +160,7 @@ customElements.define('my-high-score',
         newPlayerScore.score = newScore
 
         parseCurrentHighScore.push(newPlayerScore)
-
         const scoreString = JSON.stringify(parseCurrentHighScore)
-
-        console.log(newPlayerScore)
-        console.log(parseCurrentHighScore)
-        console.log('striiing')
-        console.log(scoreString)
 
         window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
         newPlayerScore = {}
@@ -190,33 +171,16 @@ customElements.define('my-high-score',
       let storedScore = JSON.parse(storedData)
       let lengthStoredScore = Object.keys(storedScore).length
 
-      console.log('the array----------------')
-      console.log(storedScore)
-      console.log(lengthStoredScore)
-
-      // hantera ordning:
-      if (lengthStoredScore <= 5) {
-        console.log('5 eller mindre scores! endast sortera!')
-
-        console.log(storedScore[0].score)
-      // console.log(storedScore[1].score)
-      }
-
       // sorterar ordningen i array baserat på spelarnas score
-      const sorting = storedScore.sort(function (a, b) {
+      storedScore.sort(function (a, b) {
         return a.score - b.score
       })
 
-      console.log(sorting)
-
       // om mer än 5 scores
       if (lengthStoredScore > 5) {
-        console.log('-------mer än 5 startar-------')
-        console.log('DEBUG det är mer än 5 scores! klipper ut 5 första (alla redan sorterade)')
         storedScore = storedScore.splice(0, 5) // om det finns mer än 5 scores ersätts storedScore med endast 5 första score objekten! (efter att de sorterats i rätt ordning!)
         lengthStoredScore = 5 // tar bort bugg
-        console.log(storedScore)
-        console.log('-------mer än 5 slutar-------')
+
         // skriver över local storage med endast 5 scores:
         const stringifyFiveScores = JSON.stringify(storedScore)
 
