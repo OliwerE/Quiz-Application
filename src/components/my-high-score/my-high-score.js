@@ -89,7 +89,7 @@ customElements.define('my-high-score',
      * Attributes observed if changed.
      */
     static get observedAttributes () {
-
+      // om används glöm ej README!
     }
 
     /**

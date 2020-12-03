@@ -11,7 +11,7 @@
 
 const template = document.createElement('template')
 template.innerHTML = `
-<div id="nameSetup">
+<div id="my-countdown-timer-container">
 <p>Tid kvar:</p>
 <span id="countdowntimer"></span>
 </div>
