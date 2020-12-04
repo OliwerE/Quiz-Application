@@ -72,6 +72,8 @@ customElements.define('my-quiz-question',
 
     /**
      * Attributes observed if changed.
+     *
+     * @returns {string} - the observed attribute found.
      */
     static get observedAttributes () {
       return ['startUrl']
