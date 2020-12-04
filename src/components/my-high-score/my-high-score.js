@@ -159,7 +159,6 @@ customElements.define('my-high-score',
         window.localStorage.setItem('my-high-score', scoreString)
         newPlayerScore = {}
       }
-      // alert(newScore)
       if (window.localStorage.getItem('my-high-score') !== null) {
         this.displayScores()
       } else {
@@ -176,12 +175,12 @@ customElements.define('my-high-score',
       let storedScore = JSON.parse(storedData)
       let lengthStoredScore = Object.keys(storedScore).length // Length of high score list
 
-      if (window.localStorage.getItem(this._newHighScore) !== '-') {
       // Sorts high score array.
-        storedScore.sort(function (a, b) {
-          return a.score - b.score
-        })
+      storedScore.sort(function (a, b) {
+        return a.score - b.score
+      })
 
+      if (window.localStorage.getItem(this._newHighScore) !== '-') {
         if (lengthStoredScore > 5) {
           storedScore = storedScore.splice(0, 5) // Saves only five best results.
           lengthStoredScore = 5

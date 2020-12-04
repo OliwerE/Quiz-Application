@@ -12,7 +12,7 @@
 const template = document.createElement('template')
 template.innerHTML = `
 <div id="my-countdown-timer-container">
-<p>Tid kvar:</p>
+<p>Time left:</p>
 <span id="countdowntimer"></span>
 </div>
 `
@@ -55,7 +55,7 @@ customElements.define('my-countdown-timer',
      */
     connectedCallback () {
       const _this = this
-      const awaitDom = setInterval(() => { // En bättre lösning!! (använd annars await eller promise!)
+      const awaitDom = setInterval(() => {
         if (_this.shadowRoot.querySelector('#countdowntimer') === null) {
           console.log('Waiting for element to appear in DOM')
         } else {

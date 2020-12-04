@@ -48,36 +48,11 @@ customElements.define('my-quiz',
     }
 
     /**
-     * Attributes observed if changed.
-     */
-    static get observedAttributes () {
-
-    }
-
-    /**
      * Called when the element is loaded. creates nickname element inside an element.
      */
     connectedCallback () {
       const clickLog = document.createElement('my-nickname')
       document.querySelector('#container').appendChild(clickLog)
-    }
-
-    /**
-     * Called when an attribute has changed.
-     *
-     * @param {string} name - name of the attribute.
-     * @param {string} oldValue - the old attribute value.
-     * @param {string} newValue - the new attribute value.
-     */
-    attributeChangedCallback (name, oldValue, newValue) {
-
-    }
-
-    /**
-     * Called when element is removed from dom.
-     */
-    disconnectedCallback () {
-
     }
 
     /**
@@ -143,8 +118,9 @@ customElements.define('my-quiz',
       const responseText = document.createTextNode('Time ran out!')
       responseElement.appendChild(responseText)
 
+      const _this = this
       setTimeout(function () {
-        document.querySelector('my-quiz').lostOrWonDisplayHighScore()
+        _this.lostOrWonDisplayHighScore()
       }, 1500)
     }
 

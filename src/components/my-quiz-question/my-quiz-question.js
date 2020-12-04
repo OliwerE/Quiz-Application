@@ -11,7 +11,7 @@
 
 const template = document.createElement('template')
 template.innerHTML = `
-<h1 id="questionTitle">Fråga:</h1>
+<h1 id="questionTitle">Question:</h1>
 `
 
 /**
@@ -21,8 +21,8 @@ const questionInput = document.createElement('template')
 questionInput.innerHTML = `
 <div id="displayedQustion">
 <h3 id="question"></h3>
-<input type="text" placeholder="Svar" id="questionInput" maxlength="20">
-<button type="button" id="answerBtn">Fortsätt</button>
+<input type="text" placeholder="Answer" id="questionInput" maxlength="20">
+<button type="button" id="answerBtn">Continue</button>
 <p id="response"></p>
 </div>
 `
@@ -37,10 +37,10 @@ questionRadio.innerHTML = `
 
 <form id="altForm">
 <div id="altFormBtns"></div>
-<input type="button" id="continueBtn" value="Submit">
+<input type="button" id="continueBtn" value="Continue">
 </form>
 
-<!--<button type="button" id="answerBtn">Fortsätt</button>-->
+<!--<button type="button" id="answerBtn">Continue</button>-->
 <p id="response"></p>
 </div>
 `
@@ -59,8 +59,6 @@ customElements.define('my-quiz-question',
     constructor () {
       super()
       this._getCount = 0 // Number of received questions
-      this._firstUrl = 'http://courselab.lnu.se/question/1' // Used when game is restarting
-      this._attributeUrl = 'http://courselab.lnu.se/question/1' // First url, can be changed using Attribute.
       this._nextUrl = 'http://courselab.lnu.se/question/1' // Url to next question or answer
 
       /**
@@ -71,40 +69,11 @@ customElements.define('my-quiz-question',
     }
 
     /**
-     * Attributes observed if changed.
-     *
-     * @returns {string} - the observed attribute found.
-     */
-    static get observedAttributes () {
-      return ['startUrl']
-    }
-
-    /**
      * Called when the element is loaded. Runs getQuestion method.
      */
     connectedCallback () {
       window.localStorage.setItem('my-quiz-question', '-') // Result if user loses.
       this.getQuestion()
-    }
-
-    /**
-     * Called when an attribute has changed.
-     *
-     * @param {string} name - name of the attribute.
-     * @param {string} oldValue - the old attribute value.
-     * @param {string} newValue - the new attribute value.
-     */
-    attributeChangedCallback (name, oldValue, newValue) {
-      if (name === 'startUrl' && typeof newValue === 'string') {
-        this._attributeUrl = newValue
-      }
-    }
-
-    /**
-     * Called when element is removed from dom.
-     */
-    disconnectedCallback () {
-
     }
 
     /**
@@ -305,18 +274,18 @@ customElements.define('my-quiz-question',
         document.querySelector('my-quiz').stopTotTimeCounter() // Stops total time
         window.localStorage.setItem('my-quiz-question', document.querySelector('my-quiz').totQuizTime) // Stores total time in local storage
 
-        setTimeout(function () { // Displays response message in 1.5 seconds, then removes question and displays highscore
+        setTimeout(function () { // Displays response message then removes question and displays highscore.
           document.querySelector('my-quiz').lostOrWonDisplayHighScore()
         }, 1500)
       } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) { // if it's not the last question
         this._nextUrl = this._answerResponse.nextURL // Adds next url
 
         const _this = this
-        setTimeout(function () { // Displays response message in 1.5 seconds, then resets question.
+        setTimeout(function () { // Displays response message then resets question.
           _this.resetQuestion()
         }, 1500)
       } else if (this._statusCode === 400) { // If the answer is wrong.
-        setTimeout(function () { // Displays response message in 1.5 seconds, then restarts quiz.
+        setTimeout(function () { // Displays response message then display high score.
           document.querySelector('my-quiz').lostOrWonDisplayHighScore()
         }, 1500)
       } else {
