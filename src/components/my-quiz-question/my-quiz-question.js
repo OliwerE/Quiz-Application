@@ -74,7 +74,7 @@ customElements.define('my-quiz-question',
      * Attributes observed if changed.
      */
     static get observedAttributes () {
-      // attribute url fixa!
+      return ['startUrl']
     }
 
     /**
@@ -92,7 +92,9 @@ customElements.define('my-quiz-question',
      * @param {string} newValue - the new attribute value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-      // attribute url fixa!
+      if (name === 'startUrl' && typeof newValue === 'string') {
+        this._attributeUrl = newValue
+      }
     }
 
     /**
