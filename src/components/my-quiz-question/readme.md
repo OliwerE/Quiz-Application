@@ -22,12 +22,6 @@ the altForm continue button is styleable using the id `continueBtn`.
 
 the response message is styleable using the id `response`.
 
-## Attributes
-
-### `startUrl`
-
-The url used to get the first question.
-
 How to use:
 
 ## In HTML

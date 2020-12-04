@@ -5,7 +5,7 @@ The main component of the quiz. Controls communication with the generic componen
 How to use:
 
 ## In HTML
-Import the component module in the head element.
+Import the component modules in the head element.
 ```HTML
 <script type="module" src="js/components/my-quiz/index.js"></script>
 <script type="module" src="js/components/my-quiz-question/index.js"></script>
@@ -22,7 +22,7 @@ Create a div with attribute `container` and add the element inside the div eleme
 ```
 
 ## In Javascript
-Import the component in index.js
+Import the components in index.js
 ```Javascript
 import './components/my-quiz/'
 import './components/my-quiz-question/'
