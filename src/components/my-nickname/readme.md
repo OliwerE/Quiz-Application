@@ -1,6 +1,6 @@
 # &lt;my-nickname&gt;
 
-A web component that stores a name (string) up to 20 characters in the local storage using the key my-nickname.
+A web component that stores a name (string) up to 20 characters in the local storage using the key my-nickname. The component restarts if the input field is empty and gives user an alert.
 
 ## Styling
 

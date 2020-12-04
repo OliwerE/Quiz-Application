@@ -123,10 +123,15 @@ customElements.define('my-nickname',
     }
 
     /**
-     * Removes my-nickname element from dom.
+     * If input field has a name the nickname element is removed from the dom.
      */
     removeQuizSetup () {
-      document.querySelector('my-nickname').remove()
+      if (window.localStorage.getItem('my-nickname').length === 0) { // Restarts component if nickname input is empty.
+        this.connectedCallback()
+        alert('Nickname is empty!')
+      } else {
+        document.querySelector('my-nickname').remove()
+      }
     }
   }
 )
