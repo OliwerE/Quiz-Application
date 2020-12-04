@@ -83,6 +83,9 @@ customElements.define('my-high-score',
       this._nickname = 'my-nickname'
       this._newHighScore = 'my-new-high-score'
 
+      /**
+       * Shadowdom containing the template.
+       */
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
     }
@@ -111,7 +114,7 @@ customElements.define('my-high-score',
      * @param {string} newValue - the new attribute value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-      if (name === 'nicknameKey') { // If the nickname key in local storage is changed
+      if (name === 'nicknameKey') { // If the nickname key in local storage is changed.
         this._nickname = newValue
       } else if (name === 'newHighScorekey') { // if the new high score key in local storage is changed.
         this._newHighScore = newValue
@@ -119,39 +122,29 @@ customElements.define('my-high-score',
     }
 
     /**
-     * Called when element is removed from dom.
-     */
-    disconnectedCallback () {
-
-    }
-
-    /**
      * A method comparing and displaying the result in the template.
      */
     compareResult () {
-      const nickname = window.localStorage.getItem(this._nickname) // får namnet, fixa attribut för att ändra vilken key namnet finns i (om annan komponent skulle användas!)
-      const newScore = window.localStorage.getItem(this._newHighScore) // nya higshcore ändra även denna med attribut!
-      const currentHighScoreList = window.localStorage.getItem('my-high-score')
+      const nickname = window.localStorage.getItem(this._nickname) // Gets nickname from local storage.
+      const newScore = window.localStorage.getItem(this._newHighScore) // Gets new score from local storage.
+      const currentHighScoreList = window.localStorage.getItem('my-high-score') // Gets current high score.
 
-      if (currentHighScoreList === null) { // om local storage inte har high score lista
-      // skapar resultatets array
+      if (currentHighScoreList === null) { // If local storage doesn't have high score data.
         let newScoreArray = []
-        // json object
         let playerScoreObject = {}
 
         playerScoreObject.username = nickname
         playerScoreObject.score = newScore
 
+        // Adds new object into the array and turns array into a string.
         newScoreArray.push(playerScoreObject)
         const stringArray = JSON.stringify(newScoreArray)
 
-        // skapar array string i local storage:
         window.localStorage.setItem('my-high-score', stringArray)
 
-        // tar bort:
         playerScoreObject = {}
         newScoreArray = []
-      } else {
+      } else { // If local storage does have high score data.
         const currentHighScore = window.localStorage.getItem('my-high-score')
         const parseCurrentHighScore = JSON.parse(currentHighScore)
         let newPlayerScore = {}
@@ -159,51 +152,49 @@ customElements.define('my-high-score',
         newPlayerScore.username = nickname
         newPlayerScore.score = newScore
 
+        // Adds new player inte parseCurrentHighScore array and creates string
         parseCurrentHighScore.push(newPlayerScore)
         const scoreString = JSON.stringify(parseCurrentHighScore)
 
-        window.localStorage.setItem('my-high-score', scoreString) // aktivera sen!
+        window.localStorage.setItem('my-high-score', scoreString)
         newPlayerScore = {}
       }
 
       const storedData = window.localStorage.getItem('my-high-score')
 
       let storedScore = JSON.parse(storedData)
-      let lengthStoredScore = Object.keys(storedScore).length
+      let lengthStoredScore = Object.keys(storedScore).length // Length of high score list
 
-      // sorterar ordningen i array baserat på spelarnas score
+      // Sorts high score array.
       storedScore.sort(function (a, b) {
         return a.score - b.score
       })
 
-      // om mer än 5 scores
       if (lengthStoredScore > 5) {
-        storedScore = storedScore.splice(0, 5) // om det finns mer än 5 scores ersätts storedScore med endast 5 första score objekten! (efter att de sorterats i rätt ordning!)
-        lengthStoredScore = 5 // tar bort bugg
+        storedScore = storedScore.splice(0, 5) // Saves only five best results.
+        lengthStoredScore = 5
 
-        // skriver över local storage med endast 5 scores:
         const stringifyFiveScores = JSON.stringify(storedScore)
 
+        // Overwrites local storage with 5 best results.
         window.localStorage.setItem('my-high-score', stringifyFiveScores)
       }
 
-      // lägg till namn och score i listan:
-
-      for (let i = 0; i < lengthStoredScore; i++) { // varje score skrivs in i high score!
-      // namn
+      for (let i = 0; i < lengthStoredScore; i++) { // Each player added into high score table.
+        // Name
         const topName = '#top' + i + 'name'
         const topNameElement = this.shadowRoot.querySelector(topName)
-        // var topText = 'Name: ' + storedScore[i].username + ' Score: ' + storedScore[i].score
         const topNameTextNode = document.createTextNode(storedScore[i].username)
         topNameElement.appendChild(topNameTextNode)
 
-        // score:
+        // score
         const topScore = '#top' + i + 'score'
         const topScoreElement = this.shadowRoot.querySelector(topScore)
         const topScoreTextNode = document.createTextNode(storedScore[i].score)
         topScoreElement.appendChild(topScoreTextNode)
       }
 
+      // Displays current players score.
       const yourScoreText = document.createTextNode(newScore)
       this.shadowRoot.querySelector('#yourScore').appendChild(yourScoreText)
     }

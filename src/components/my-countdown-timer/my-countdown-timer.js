@@ -31,8 +31,8 @@ customElements.define('my-countdown-timer',
     constructor () {
       super()
 
-      this._ranOutOfTime = 'my-quiz'
-      this.time = 20 // tiden att räkna ner ifrån
+      this._ranOutOfTime = 'my-quiz' // an element the component calls when the time runs out
+      this.time = 20 // Time component counts down from.
 
       /**
        * Shadowdom containing the countdown div.
@@ -54,7 +54,7 @@ customElements.define('my-countdown-timer',
      * Called when the element is loaded. Runs beginCountdown method.
      */
     connectedCallback () {
-      this.beginCountdown() // startar nedräkning
+      this.beginCountdown()
     }
 
     /**
@@ -67,28 +67,21 @@ customElements.define('my-countdown-timer',
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'limit') {
         const newLimit = Number(newValue)
-        if (Number.isInteger(newLimit) === true) { // om newValue är av typen number (förutom NaN)
+        if (Number.isInteger(newLimit) === true) { // Only changes this.time if newValue is a number.
           this.time = newLimit
         }
-      } else if (name === 'timeRanOut') { // ev kontrollera att attributet är ett id??
+      } else if (name === 'timeRanOut') {
         this._ranOutOfTime = newValue
       }
     }
 
     /**
-     * Called when element is removed from dom.
+     * Method starting countdown from this.time.
      */
-    disconnectedCallback () {
-
-    }
-
-    /**
-     * Method starting countdown.
-     */
-    beginCountdown () { // timern som räknar ner från this.time (ta bort 20 från template!)
+    beginCountdown () {
       const _this = this
-      setTimeout(function () { // DÅLIG LÖSNING???
-        _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time // innan första sekunden tas bort!
+      setTimeout(function () {
+        _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time // Adds starting second
       }, 0)
 
       _this.timer = setInterval(function () {
@@ -97,7 +90,7 @@ customElements.define('my-countdown-timer',
 
         if (_this.time <= 0) {
           clearInterval(_this.timer)
-          document.querySelector(_this._ranOutOfTime).myCountdownTimerRanOutOfTime() // ta bort hårdkodning för annan komponent! (lägg till med attribut??)
+          document.querySelector(_this._ranOutOfTime).myCountdownTimerRanOutOfTime() // a method called in another element (this._ranOutOfTime) when time reaches zero.
         }
       }, 1000)
     }
