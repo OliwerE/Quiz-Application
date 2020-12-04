@@ -8,7 +8,6 @@
 /**
  * A template for the quiz header.
  */
-
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
@@ -18,7 +17,9 @@ h1 {
 </style>
 <h1>Quiz</h1>
 `
-
+/**
+ * A template for the restart quiz button.
+ */
 const restartBtn = document.createElement('template')
 restartBtn.innerHTML = `
 <button type="button" id="restartBtn">Restart quiz</button>
@@ -37,8 +38,11 @@ customElements.define('my-quiz',
    */
     constructor () {
       super()
-      this.totQuizTime = 0 // användares totala tid
+      this.totQuizTime = 0 // Users total time.
 
+      /**
+       * Shadowdom containing the template.
+       */
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
     }
@@ -51,14 +55,11 @@ customElements.define('my-quiz',
     }
 
     /**
-     * Called when the element is loaded. creates nickname element inside an element. Then runs awaitNickname method.
+     * Called when the element is loaded. creates nickname element inside an element.
      */
     connectedCallback () {
-      // skapar nickname med my-nickname komponent!
       const clickLog = document.createElement('my-nickname')
       document.querySelector('#container').appendChild(clickLog)
-
-      // this.awaitNickname()
     }
 
     /**
@@ -95,13 +96,13 @@ customElements.define('my-quiz',
     }
 
     /**
-     * A method starting the total time counter.
+     * A method starting the total time counter. Counts seconds until player has finished.
      */
     totTimeCounter () {
       const _this = this
       this.quizLengthTimer = setInterval(() => {
         _this.totQuizTime = _this.totQuizTime + 1
-      }, 1000)
+      }, 1000) // 1 second interal.
     }
 
     /**
@@ -116,7 +117,7 @@ customElements.define('my-quiz',
      */
     startCountDownTimer () {
       const myTimer = document.createElement('my-countdown-timer')
-      document.querySelector('#container').appendChild(myTimer).setAttribute('limit', document.querySelector('my-quiz-question').returnObject.limit)
+      document.querySelector('#container').appendChild(myTimer).setAttribute('limit', document.querySelector('my-quiz-question').returnObject.limit) // Starts question countdown using limit attribute.
     }
 
     /**
@@ -141,9 +142,9 @@ customElements.define('my-quiz',
       const responseText = document.createTextNode('Time ran out!')
       responseElement.appendChild(responseText)
 
+      const _this = this
       setTimeout(function () {
-        document.querySelector('my-quiz').restartmyQuiz()
-        // _this.restartmyQuiz()
+        _this.restartmyQuiz()
       }, 1500)
     }
 
@@ -151,46 +152,46 @@ customElements.define('my-quiz',
      * Restarts the quiz.
      */
     restartmyQuiz () {
-    // stoppar total tid räknaren
-      this.stopTotTimeCounter()
+      this.stopTotTimeCounter() // Stops users total time counter
 
-      // tar bort element
       document.querySelector('my-quiz-question').remove()
       document.querySelector('my-countdown-timer').remove()
 
-      // startar igen
-      this.connectedCallback()
+      this.connectedCallback() // Restarts quiz
     }
 
     /**
      * Removes question title and creates my-high-score element.
      */
     showHighScore () {
-      // ta bort text
-      // document.querySelector('my-quiz-question').shadowRoot.querySelector('#questionTitle').remove()
+
       document.querySelector('my-quiz-question').remove()
 
-      // skapar high score element
       const myHighScore = document.createElement('my-high-score')
       document.querySelector('#container').appendChild(myHighScore)
 
-      // creates restart button
-      document.querySelector('#container').appendChild(restartBtn.content.cloneNode(true))
+      document.querySelector('#container').appendChild(restartBtn.content.cloneNode(true)) // Creates restart button.
 
-      // const _this = this
-      setTimeout(() => { // DÅLIG LÖSNING!
-        const restartBtn = document.querySelector('#restartBtn')
+      const _this = this
+      const awaitDom = setInterval(() => { // Awaits restart button to appear in the DOM
+        if (document.querySelector('#restartBtn') === null) { // If element isn't found
+          console.log('Waiting for restart button to appear in DOM')
+        } else { // If element is found
+          const restartBtn = document.querySelector('#restartBtn')
 
-        /**
-         * A function used by restart quiz event.
-         */
-        this._eventRestartQuiz = () => {
-          this.removeEventRestartQuizListener()
-          this.restartFromHighScore()
+          /**
+          * A function used by restart quiz event.
+          */
+          _this.eventRestartQuiz = () => {
+          _this.removeEventRestartQuizListener() // Removes event listener.
+          _this.restartFromHighScore() // Restarts quiz.
         }
+        restartBtn.addEventListener('click', _this.eventRestartQuiz) // Event awaits click on restart button.
+        clearInterval(awaitDom)
+        }
+      }, 1)
 
-        restartBtn.addEventListener('click', this._eventRestartQuiz)
-      }, 0)
+
     }
 
     /**
@@ -205,15 +206,13 @@ customElements.define('my-quiz',
      * A method restarting the quiz when the player click restart quiz.
      */
     restartFromHighScore () {
-      // tar bort high score och knapp
+      // Removes elements.
       document.querySelector('my-high-score').remove()
       document.querySelector('#restartBtn').remove()
 
-      // återställer total tid
-      this.totQuizTime = 0
+      this.totQuizTime = 0 // Reset total time
 
-      // startar från början
-      this.connectedCallback()
+      this.connectedCallback() // Method calls my-nickname
     }
   }
 )

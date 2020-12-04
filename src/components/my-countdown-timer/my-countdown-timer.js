@@ -54,7 +54,17 @@ customElements.define('my-countdown-timer',
      * Called when the element is loaded. Runs beginCountdown method.
      */
     connectedCallback () {
-      this.beginCountdown()
+      const _this = this
+      const awaitDom = setInterval(() => { // En bättre lösning!! (använd annars await eller promise!)
+        if (_this.shadowRoot.querySelector('#countdowntimer') === null) {
+          console.log('Waiting for element to appear in DOM')
+        } else {
+          _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time // Adds starting second
+          _this.beginCountdown()
+          clearInterval(awaitDom)
+        }
+      }, 1)
+
     }
 
     /**
@@ -80,10 +90,6 @@ customElements.define('my-countdown-timer',
      */
     beginCountdown () {
       const _this = this
-      setTimeout(function () {
-        _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time // Adds starting second
-      }, 0)
-
       _this.timer = setInterval(function () {
         _this.time = _this.time - 1
         _this.shadowRoot.querySelector('#countdowntimer').textContent = _this.time

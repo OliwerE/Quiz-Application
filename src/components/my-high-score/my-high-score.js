@@ -81,7 +81,7 @@ customElements.define('my-high-score',
     constructor () {
       super()
       this._nickname = 'my-nickname'
-      this._newHighScore = 'my-new-high-score'
+      this._newHighScore = 'my-quiz-question'
 
       /**
        * Shadowdom containing the template.

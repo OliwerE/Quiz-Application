@@ -40,6 +40,9 @@ customElements.define('my-nickname',
       super()
       this.returnElement = 'my-quiz'
 
+      /**
+       * Shadowdom containing the template.
+       */
       this.attachShadow({ mode: 'open' })
         .appendChild(form.content.cloneNode(true))
     }
@@ -57,22 +60,21 @@ customElements.define('my-nickname',
      * Called when the element is loaded. Adds event listeners for button (click and enter).
      */
     connectedCallback () {
-      const setupBtn = this.shadowRoot.querySelector('#setupBtn')
+      const setupBtn = this.shadowRoot.querySelector('#setupBtn') // Continue button.
 
       /**
        * A function used when user click the continue button.
        */
-      this.eventSetupBtn = () => { // ta bort denna event lyssnare när den är färdig!
+      this.eventSetupBtn = () => {
         const inputValue = this.shadowRoot.querySelector('#myInput').value
         window.localStorage.setItem('my-nickname', inputValue)
         this.removeNicknameEventListeners()
         this.removeQuizSetup()
       }
 
-      setupBtn.addEventListener('click', this.eventSetupBtn)
+      setupBtn.addEventListener('click', this.eventSetupBtn) // Event listens on continue button.
 
-      // Event lyssnare enter
-      const enterBtn = this.shadowRoot.querySelector('#myInput')
+      const enterBtn = this.shadowRoot.querySelector('#myInput') // input field
 
       /**
        * A function used by enter click event.
@@ -88,7 +90,7 @@ customElements.define('my-nickname',
         }
       }
 
-      enterBtn.addEventListener('keypress', this.eventEnterBtn)
+      enterBtn.addEventListener('keypress', this.eventEnterBtn) // Event listens on enter key.
     }
 
     /**
@@ -112,7 +114,7 @@ customElements.define('my-nickname',
     }
 
     /**
-     * A function that removes event listeners.
+     * Removes all my-nickname event listeners.
      */
     removeNicknameEventListeners () {
       const _this = this

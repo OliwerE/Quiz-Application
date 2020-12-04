@@ -58,11 +58,14 @@ customElements.define('my-quiz-question',
    */
     constructor () {
       super()
-      this._getCount = 0 // antal frågor som tagits emot
-      this._firstUrl = 'http://courselab.lnu.se/question/1' // Används när spelet ska starta om! // denna får INTE ÄNDRAS!
-      this._attributeUrl = 'http://courselab.lnu.se/question/1'
-      this._nextUrl = 'http://courselab.lnu.se/question/1' // första frågan
+      this._getCount = 0 // Number of received questions
+      this._firstUrl = 'http://courselab.lnu.se/question/1' // Used when game is restarting
+      this._attributeUrl = 'http://courselab.lnu.se/question/1' // First url, can be changed using Attribute.
+      this._nextUrl = 'http://courselab.lnu.se/question/1' // Url to next question or answer
 
+      /**
+       * Shadowdom containing the template.
+       */
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
     }
@@ -78,7 +81,6 @@ customElements.define('my-quiz-question',
      * Called when the element is loaded. Runs getQuestion method.
      */
     connectedCallback () {
-      // this.firstUrlCheck() // ändra till attribute callback!
       this.getQuestion()
     }
 
@@ -106,19 +108,19 @@ customElements.define('my-quiz-question',
      */
     async getQuestion () {
       const _this = this
-      await window.fetch(this._nextUrl).then(function (response) {
-        _this._statusCode = response.status // lagrar statuskoden // lagrar statuskoden
+      await window.fetch(this._nextUrl).then(function (response) { // Get data from this._nextUrl using fetch.
+        _this._statusCode = response.status // Stores status code
         return response.json()
       }).then(function (obj) {
         if (_this._getCount === 0) {
-          document.querySelector('my-quiz').totTimeCounter() // counts entire round
+          document.querySelector('my-quiz').totTimeCounter() // Starts total time counter if it's the first question.
         }
-        _this._getCount = _this._getCount + 1
-        _this.returnObject = obj
-        _this._nextUrl = obj.nextURL
-        _this.showQuestion()
-      }).catch(function (err) { // fångar eventuella fel
-        console.error('fel har inträffat')
+        _this._getCount = _this._getCount + 1 // Adds one to get count.
+        _this.returnObject = obj // Stores returned object from server
+        _this._nextUrl = obj.nextURL // Stores next url in this._nextUrl
+        _this.showQuestion() // Runs show question when data is received
+      }).catch(function (err) {
+        console.error('an error has occurred (get)')
         console.error(err)
       })
     }
@@ -131,45 +133,40 @@ customElements.define('my-quiz-question',
       const obj = this.returnObject
       const currentQuestion = obj.question
 
-      if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
-        // skapar question template
+      if (this.returnObject.alternatives === undefined) { // If question is using input element.
         this.shadowRoot.appendChild(questionInput.content.cloneNode(true))
-      } else if (this.returnObject.alternatives !== undefined) { // om frågan är av typen radio btn
-        // skapar question template
+      } else if (this.returnObject.alternatives !== undefined) { // If question is using radio buttons.
         this.shadowRoot.appendChild(questionRadio.content.cloneNode(true))
 
-        // skapa antal radioknappar här!
-        const numOfAlt = Object.keys(obj.alternatives).length
+        const numOfAlt = Object.keys(obj.alternatives).length // number of alternatives.
 
-        for (let i = 0; i < numOfAlt; i++) { // skapar lika många radioknappar som alternativ!
+        for (let i = 0; i < numOfAlt; i++) { // Creates correct amount of radio buttons.
           const button = document.createElement('input')
 
           const currentValue = i + 1
           const currentButton = `alt${currentValue}`
 
-          // lägger till i formulär och skapar id
-          this.shadowRoot.querySelector('#altFormBtns').appendChild(button).setAttribute('id', currentButton)
+          this.shadowRoot.querySelector('#altFormBtns').appendChild(button).setAttribute('id', currentButton) // adds button in form.
 
-          // sätter attribut
+          // Creates attributes.
           this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('type', 'radio')
           this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('name', 'alt')
           this.shadowRoot.querySelector(`#${currentButton}`).setAttribute('value', `alt${currentValue}`)
 
-          // skapa label för knapp
-
+          // Create button labels.
           const label = document.createElement('label')
           const labelQuestion = 'alt' + (i + 1)
           const labelTextNode = document.createTextNode(obj.alternatives[labelQuestion])
           label.appendChild(labelTextNode)
           this.shadowRoot.querySelector('#altFormBtns').appendChild(label)
 
-          // byter rad:
+          // Changes row.
           const changeRow = document.createElement('br')
           this.shadowRoot.querySelector('#altFormBtns').appendChild(changeRow)
         }
       }
 
-      // skriver ut frågan
+      // Displays question
       const questionHeader = this.shadowRoot.querySelector('#question')
       const questionHeaderText = document.createTextNode(currentQuestion)
       questionHeader.appendChild(questionHeaderText)
@@ -185,7 +182,7 @@ customElements.define('my-quiz-question',
      * Then runs postAnswer method with answer as argument.
      */
     questionAnswer () { // svaret väntas in och bearbetas!
-      if (this.returnObject.alternatives === undefined) { // om frågan är av typen input
+      if (this.returnObject.alternatives === undefined) { // Creates event listeners for input field questions.
         const answerBtn = this.shadowRoot.querySelector('#answerBtn')
         const inputElement = this.shadowRoot.querySelector('#questionInput')
 
@@ -198,12 +195,9 @@ customElements.define('my-quiz-question',
           this.postAnswer(answer)
         }
 
-        // trycka på knappen
-        answerBtn.addEventListener('click', this._clickBtnEvent)
+        answerBtn.addEventListener('click', this._clickBtnEvent) // Event triggers when user click the continue button.
 
-        // used in enter key event
         const _this = this
-
         /**
          * A function used by the input fields enter key event.
          *
@@ -217,18 +211,17 @@ customElements.define('my-quiz-question',
           }
         }
 
-        // enter knapp
-        inputElement.addEventListener('keypress', this._eventClickEnter)
-      } else { // om frågan har alternativ
+        inputElement.addEventListener('keypress', this._eventClickEnter) // Event triggers when user press enter inside input field
+      } else { // Creates event listeners for questions with alternatives.
         const radiocontBtn = this.shadowRoot.querySelector('#continueBtn')
 
         /**
          * A function used by continuebutton (questions with alternatives).
          */
         this._radioBtnClick = () => {
-          const allRadioBtns = this.shadowRoot.querySelectorAll('input[name="alt"]') // alla radioknappar
+          const allRadioBtns = this.shadowRoot.querySelectorAll('input[name="alt"]') // Selects all radio buttons with name alt.
           let answer
-          for (const radiobutton of allRadioBtns) { // går igenom och kontrollerar om en radioknapp är markerad. om någon är läggs värdet i value
+          for (const radiobutton of allRadioBtns) { // Checks if a radio button is checked.
             if (radiobutton.checked) {
               answer = radiobutton.value
               break
@@ -249,10 +242,10 @@ customElements.define('my-quiz-question',
      */
     removeEnterListener (type) {
       const _this = this
-      if (type === 'input') {
+      if (type === 'input') { // Event listeners removed if input is used.
         this.shadowRoot.querySelector('#questionInput').removeEventListener('keypress', _this._eventClickEnter)
         this.shadowRoot.querySelector('#answerBtn').removeEventListener('click', _this._clickBtnEvent)
-      } else if (type === 'radio') {
+      } else if (type === 'radio') { // Event listeners removed if radio buttons is used.
         this.shadowRoot.querySelector('#continueBtn').removeEventListener('click', _this._radioBtnClick)
       }
     }
@@ -264,31 +257,31 @@ customElements.define('my-quiz-question',
      * @param {object} userResult - An object containing the users answer.
      */
     async postAnswer (userResult) {
-      document.querySelector('my-quiz').pauseCountDownTimer() // pausar nedräkning!
+      document.querySelector('my-quiz').pauseCountDownTimer() // Stops countdown timer
       const obj = {
         answer: ''
-      } // Svar objekt
+      } // Answer object
 
       if (userResult !== undefined) {
-        obj.answer = userResult // lägger till svaret
+        obj.answer = userResult
       }
 
       const _this = this
-      await window.fetch(this._nextUrl, { // skickar användarens svar
+      await window.fetch(this._nextUrl, { // Sends user answer to server using fetch api.
         method: 'Post',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(obj) // gör om objektet till JSON
+        body: JSON.stringify(obj)
 
       }).then(function (response) {
-        _this._statusCode = response.status // lagrar statuskoden
-        return response.json() // returnerar responsens JSON objekt
+        _this._statusCode = response.status
+        return response.json() // Returns JSON response.
       }).then(function (postResponse) {
-        _this._answerResponse = postResponse // lagrar JSON i this._answerResponse
-        _this.returnResponse()
-      }).catch(function (err) { // fångar eventuella fel
-        console.error('fel har inträffat')
+        _this._answerResponse = postResponse // Stores JSON in this._answerResponse
+        _this.returnResponse() // A method returning response to user
+      }).catch(function (err) {
+        console.error('an error has occurred (post)')
         console.error(err)
       })
     }
@@ -298,31 +291,30 @@ customElements.define('my-quiz-question',
      * If it's the last question the total time is stopped and the high score appears.
      */
     returnResponse () {
-      // respons meddelande (visas för användaren)
+      // Displays response message to user.
       const responseElement = this.shadowRoot.querySelector('#response')
       const responseText = document.createTextNode(this._answerResponse.message)
       responseElement.appendChild(responseText)
 
-      if (this._statusCode === 200 && this._answerResponse.nextURL === undefined) {
-        document.querySelector('my-quiz').stopTotTimeCounter()
-        // lägger till resultat i local storage:
-        window.localStorage.setItem('my-new-high-score', document.querySelector('my-quiz').totQuizTime) // antal sekunder det tog att svara på frågorna
+      if (this._statusCode === 200 && this._answerResponse.nextURL === undefined) { // If it was the last question
+        document.querySelector('my-quiz').stopTotTimeCounter() // Stops total time
+        window.localStorage.setItem('my-quiz-question', document.querySelector('my-quiz').totQuizTime) // Stores total time in local storage
 
         const _this = this
-        setTimeout(function () { // för att användare ska hinna se meddelande
+        setTimeout(function () { // Displays response message in 1.5 seconds, then removes question and displays highscore
           _this.resetQuestion()
-          document.querySelector('my-quiz').showHighScore()// skapar highscore element
+          document.querySelector('my-quiz').showHighScore()
         }, 1500)
-      } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
-        this._nextUrl = this._answerResponse.nextURL // sätter nästa url
+      } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) { // if it's not the last question
+        this._nextUrl = this._answerResponse.nextURL // Adds next url
 
         const _this = this
-        setTimeout(function () {
+        setTimeout(function () { // Displays response message in 1.5 seconds, then resets question.
           _this.resetQuestion()
-        }, 1500) // går inte vidare på 1.5 sekunder så användare hinner se meddelande. OBS! kan ev störa 20 sek timern!
-      } else if (this._statusCode === 400) { // om svaret är fel!
-        setTimeout(function () {
-          document.querySelector('my-quiz').restartmyQuiz() // tar bort och laddar nickname komponenten
+        }, 1500)
+      } else if (this._statusCode === 400) { // If the answer is wrong.
+        setTimeout(function () { // Displays response message in 1.5 seconds, then restarts quiz.
+          document.querySelector('my-quiz').restartmyQuiz() 
         }, 1500)
       } else {
         alert('statuscode does not equal 200 or 400! statuscode: ', this._statusCode)
@@ -332,21 +324,11 @@ customElements.define('my-quiz-question',
     /**
      * A method that removes question and countdown timer and runs getQuestion if it's not the last question.
      */
-    resetQuestion () { // återställer frågor och tar fram nästa
-      this.shadowRoot.querySelector('#displayedQustion').remove() // tar bort elementet med frågan
-      document.querySelector('my-quiz').removeCountDownTimer() // tar bort countdown elementet
-      if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) {
+    resetQuestion () {
+      this.shadowRoot.querySelector('#displayedQustion').remove()
+      document.querySelector('my-quiz').removeCountDownTimer()
+      if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) { // If it's not the last question.
         this.getQuestion()
       }
     }
-
-    /*
-firstUrlCheck() { // flytta in i attribut?
-  if (this._firstUrl === this._attributeUrl) {
-    this._nextUrl = this._firstUrl // om inget attribut används!
-  } else {
-    this._nextUrl = this._attributeUrl // om ett attribut används!
-  }
-}
-*/
   })
