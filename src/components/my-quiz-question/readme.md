@@ -40,9 +40,11 @@ Import the component module in the head element.
 <script type="module" src="js/components/my-high-score/index.js"></script>
 ```
 
-Add the element in the HTML code.
+Create a div with attribute `container` and add the element inside the div element.
 ```HTML
+<div id="container">
 <my-quiz></my-quiz>
+</div>
 ```
 
 ## In Javascript
@@ -54,7 +56,10 @@ import './components/my-nickname/'
 import './components/my-countdown-timer/'
 import './components/my-high-score/'
 ```
-Create the element using the dom API.
+Create a div with attribute `container` and add the element inside the div element.
 ```Javascript
-const highScore = document.createElement('my-quiz')
+const div = document.createElement('div')
+document.querySelector('body').appendChild(div).setAttribute('id', 'container')
+const myQuiz = document.createElement('my-quiz')
+document.querySelector('#container').appendChild(myQuiz)
 ```
