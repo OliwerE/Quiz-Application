@@ -19,9 +19,9 @@ form.innerHTML = `
 }
 </style>
 <div id="nameSetup">
-<h3>Choose nickname</h3>
-<input type="text" placeholder="Nickname" id="myInput" maxlength="20">
-<button type="button" id="setupBtn">Continue</button>
+  <h3>Choose nickname</h3>
+  <input type="text" placeholder="Nickname" id="myInput" maxlength="20">
+  <button type="button" id="setupBtn">Continue</button>
 </div>
 `
 

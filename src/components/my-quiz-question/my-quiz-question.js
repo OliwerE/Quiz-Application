@@ -20,10 +20,10 @@ template.innerHTML = `
 const questionInput = document.createElement('template')
 questionInput.innerHTML = `
 <div id="displayedQustion">
-<h3 id="question"></h3>
-<input type="text" placeholder="Answer" id="questionInput" maxlength="20">
-<button type="button" id="answerBtn">Continue</button>
-<p id="response"></p>
+  <h3 id="question"></h3>
+  <input type="text" placeholder="Answer" id="questionInput" maxlength="20">
+  <button type="button" id="answerBtn">Continue</button>
+  <p id="response"></p>
 </div>
 `
 
@@ -33,15 +33,12 @@ questionInput.innerHTML = `
 const questionRadio = document.createElement('template')
 questionRadio.innerHTML = `
 <div id="displayedQustion">
-<h3 id="question"></h3>
-
-<form id="altForm">
-<div id="altFormBtns"></div>
-<input type="button" id="continueBtn" value="Continue">
-</form>
-
-<!--<button type="button" id="answerBtn">Continue</button>-->
-<p id="response"></p>
+  <h3 id="question"></h3>
+  <form id="altForm">
+    <div id="altFormBtns"></div>
+    <input type="button" id="continueBtn" value="Continue">
+  </form>
+  <p id="response"></p>
 </div>
 `
 
