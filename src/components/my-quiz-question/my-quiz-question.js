@@ -314,7 +314,7 @@ customElements.define('my-quiz-question',
         }, 1500)
       } else if (this._statusCode === 400) { // If the answer is wrong.
         setTimeout(function () { // Displays response message in 1.5 seconds, then restarts quiz.
-          document.querySelector('my-quiz').restartmyQuiz() 
+          document.querySelector('my-quiz').restartmyQuiz()
         }, 1500)
       } else {
         alert('statuscode does not equal 200 or 400! statuscode: ', this._statusCode)

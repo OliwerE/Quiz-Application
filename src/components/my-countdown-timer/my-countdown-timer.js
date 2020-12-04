@@ -64,7 +64,6 @@ customElements.define('my-countdown-timer',
           clearInterval(awaitDom)
         }
       }, 1)
-
     }
 
     /**

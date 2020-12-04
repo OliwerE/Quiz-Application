@@ -164,7 +164,6 @@ customElements.define('my-quiz',
      * Removes question title and creates my-high-score element.
      */
     showHighScore () {
-
       document.querySelector('my-quiz-question').remove()
 
       const myHighScore = document.createElement('my-high-score')
@@ -180,18 +179,16 @@ customElements.define('my-quiz',
           const restartBtn = document.querySelector('#restartBtn')
 
           /**
-          * A function used by restart quiz event.
-          */
+           * A function used by restart quiz event.
+           */
           _this.eventRestartQuiz = () => {
-          _this.removeEventRestartQuizListener() // Removes event listener.
-          _this.restartFromHighScore() // Restarts quiz.
-        }
-        restartBtn.addEventListener('click', _this.eventRestartQuiz) // Event awaits click on restart button.
-        clearInterval(awaitDom)
+            _this.removeEventRestartQuizListener() // Removes event listener.
+            _this.restartFromHighScore() // Restarts quiz.
+          }
+          restartBtn.addEventListener('click', _this.eventRestartQuiz) // Event awaits click on restart button.
+          clearInterval(awaitDom)
         }
       }, 1)
-
-
     }
 
     /**
