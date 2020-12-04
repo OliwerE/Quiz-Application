@@ -138,34 +138,30 @@ customElements.define('my-quiz',
      * Displays time ran out text and runs restartmyquiz method.
      */
     myCountdownTimerRanOutOfTime () {
+      // Text when time runs out.
       const responseElement = document.querySelector('my-quiz-question').shadowRoot.querySelector('#response')
       const responseText = document.createTextNode('Time ran out!')
       responseElement.appendChild(responseText)
 
-      const _this = this
       setTimeout(function () {
-        _this.restartmyQuiz()
+        document.querySelector('my-quiz').lostOrWonDisplayHighScore()
       }, 1500)
     }
 
     /**
-     * Restarts the quiz.
+     * Displays high score when user runs out of time, gives wrong answer or wins quiz.
      */
-    restartmyQuiz () {
+    lostOrWonDisplayHighScore () {
       this.stopTotTimeCounter() // Stops users total time counter
-
       document.querySelector('my-quiz-question').remove()
       document.querySelector('my-countdown-timer').remove()
-
-      this.connectedCallback() // Restarts quiz
+      this.showHighScore()
     }
 
     /**
-     * Removes question title and creates my-high-score element.
+     * Creates my-high-score element.
      */
     showHighScore () {
-      document.querySelector('my-quiz-question').remove()
-
       const myHighScore = document.createElement('my-high-score')
       document.querySelector('#container').appendChild(myHighScore)
 

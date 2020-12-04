@@ -129,7 +129,7 @@ customElements.define('my-high-score',
       const newScore = window.localStorage.getItem(this._newHighScore) // Gets new score from local storage.
       const currentHighScoreList = window.localStorage.getItem('my-high-score') // Gets current high score.
 
-      if (currentHighScoreList === null) { // If local storage doesn't have high score data.
+      if (currentHighScoreList === null && newScore !== '-') { // If local storage doesn't have high score data and user didn't fail.
         let newScoreArray = []
         let playerScoreObject = {}
 
@@ -144,7 +144,7 @@ customElements.define('my-high-score',
 
         playerScoreObject = {}
         newScoreArray = []
-      } else { // If local storage does have high score data.
+      } else if (currentHighScoreList !== null && newScore !== '-') { // If local storage does have high score data and user didn't fail.
         const currentHighScore = window.localStorage.getItem('my-high-score')
         const parseCurrentHighScore = JSON.parse(currentHighScore)
         let newPlayerScore = {}
@@ -160,24 +160,33 @@ customElements.define('my-high-score',
         newPlayerScore = {}
       }
 
+      this.displayScores()
+    }
+
+    /**
+     * Adds text into high score table.
+     */
+    displayScores () {
       const storedData = window.localStorage.getItem('my-high-score')
 
       let storedScore = JSON.parse(storedData)
       let lengthStoredScore = Object.keys(storedScore).length // Length of high score list
 
+      if (window.localStorage.getItem(this._newHighScore) !== '-') {
       // Sorts high score array.
-      storedScore.sort(function (a, b) {
-        return a.score - b.score
-      })
+        storedScore.sort(function (a, b) {
+          return a.score - b.score
+        })
 
-      if (lengthStoredScore > 5) {
-        storedScore = storedScore.splice(0, 5) // Saves only five best results.
-        lengthStoredScore = 5
+        if (lengthStoredScore > 5) {
+          storedScore = storedScore.splice(0, 5) // Saves only five best results.
+          lengthStoredScore = 5
 
-        const stringifyFiveScores = JSON.stringify(storedScore)
+          const stringifyFiveScores = JSON.stringify(storedScore)
 
-        // Overwrites local storage with 5 best results.
-        window.localStorage.setItem('my-high-score', stringifyFiveScores)
+          // Overwrites local storage with 5 best results.
+          window.localStorage.setItem('my-high-score', stringifyFiveScores)
+        }
       }
 
       for (let i = 0; i < lengthStoredScore; i++) { // Each player added into high score table.
@@ -195,8 +204,11 @@ customElements.define('my-high-score',
       }
 
       // Displays current players score.
-      const yourScoreText = document.createTextNode(newScore)
+      const yourScoreText = document.createTextNode(window.localStorage.getItem(this._newHighScore))
       this.shadowRoot.querySelector('#yourScore').appendChild(yourScoreText)
+
+      // Resets current score in local storage
+      window.localStorage.setItem(this._newHighScore, '-')
     }
   }
 )

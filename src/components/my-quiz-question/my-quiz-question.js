@@ -83,6 +83,7 @@ customElements.define('my-quiz-question',
      * Called when the element is loaded. Runs getQuestion method.
      */
     connectedCallback () {
+      window.localStorage.setItem('my-quiz-question', '-')
       this.getQuestion()
     }
 
@@ -304,10 +305,8 @@ customElements.define('my-quiz-question',
         document.querySelector('my-quiz').stopTotTimeCounter() // Stops total time
         window.localStorage.setItem('my-quiz-question', document.querySelector('my-quiz').totQuizTime) // Stores total time in local storage
 
-        const _this = this
         setTimeout(function () { // Displays response message in 1.5 seconds, then removes question and displays highscore
-          _this.resetQuestion()
-          document.querySelector('my-quiz').showHighScore()
+          document.querySelector('my-quiz').lostOrWonDisplayHighScore()
         }, 1500)
       } else if (this._statusCode === 200 && this._answerResponse.nextURL !== undefined) { // if it's not the last question
         this._nextUrl = this._answerResponse.nextURL // Adds next url
@@ -318,10 +317,10 @@ customElements.define('my-quiz-question',
         }, 1500)
       } else if (this._statusCode === 400) { // If the answer is wrong.
         setTimeout(function () { // Displays response message in 1.5 seconds, then restarts quiz.
-          document.querySelector('my-quiz').restartmyQuiz()
+          document.querySelector('my-quiz').lostOrWonDisplayHighScore()
         }, 1500)
       } else {
-        alert('statuscode does not equal 200 or 400! statuscode: ', this._statusCode)
+        console.error('statuscode does not equal 200 or 400! statuscode: ', this._statusCode)
       }
     }
 
