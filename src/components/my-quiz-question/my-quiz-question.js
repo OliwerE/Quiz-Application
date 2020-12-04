@@ -83,7 +83,7 @@ customElements.define('my-quiz-question',
      * Called when the element is loaded. Runs getQuestion method.
      */
     connectedCallback () {
-      window.localStorage.setItem('my-quiz-question', '-')
+      window.localStorage.setItem('my-quiz-question', '-') // Result if user loses.
       this.getQuestion()
     }
 

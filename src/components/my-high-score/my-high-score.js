@@ -129,7 +129,7 @@ customElements.define('my-high-score',
       const newScore = window.localStorage.getItem(this._newHighScore) // Gets new score from local storage.
       const currentHighScoreList = window.localStorage.getItem('my-high-score') // Gets current high score.
 
-      if (currentHighScoreList === null && newScore !== '-') { // If local storage doesn't have high score data and user didn't fail.
+      if (currentHighScoreList === null && (newScore !== '-' || newScore === null)) { // If local storage doesn't have high score data and user didn't fail.
         let newScoreArray = []
         let playerScoreObject = {}
 
@@ -144,7 +144,7 @@ customElements.define('my-high-score',
 
         playerScoreObject = {}
         newScoreArray = []
-      } else if (currentHighScoreList !== null && newScore !== '-') { // If local storage does have high score data and user didn't fail.
+      } else if (currentHighScoreList !== null && (newScore !== '-' || newScore === null)) { // If local storage does have high score data and user didn't fail.
         const currentHighScore = window.localStorage.getItem('my-high-score')
         const parseCurrentHighScore = JSON.parse(currentHighScore)
         let newPlayerScore = {}
@@ -159,8 +159,12 @@ customElements.define('my-high-score',
         window.localStorage.setItem('my-high-score', scoreString)
         newPlayerScore = {}
       }
-
-      this.displayScores()
+      // alert(newScore)
+      if (window.localStorage.getItem('my-high-score') !== null) {
+        this.displayScores()
+      } else {
+        this.currentPlayerScore()
+      }
     }
 
     /**
@@ -203,6 +207,13 @@ customElements.define('my-high-score',
         topScoreElement.appendChild(topScoreTextNode)
       }
 
+      this.currentPlayerScore()
+    }
+
+    /**
+     * Displays current player score.
+     */
+    currentPlayerScore () {
       // Displays current players score.
       const yourScoreText = document.createTextNode(window.localStorage.getItem(this._newHighScore))
       this.shadowRoot.querySelector('#yourScore').appendChild(yourScoreText)
